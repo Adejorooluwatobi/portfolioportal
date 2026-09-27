@@ -1,0 +1,54 @@
+<header id="header" style="background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #1e293b; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 40;">
+  <div class="hdr-left" style="display: flex; align-items: center; gap: 14px;">
+    <button class="hamburger" (click)="toggleSidebar.emit()" title="Toggle Sidebar" style="background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; border-radius: 8px; display: flex; align-items: center;">
+      <svg width="20" height="20" style="width: 20px; height: 20px; min-width: 20px; min-height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <span class="page-title" style="font-size: 18px; font-weight: 700; color: #fff;">{{ pageTitle }}</span>
+  </div>
+
+  <div class="hdr-search-wrap" style="flex: 1; max-width: 340px; position: relative;">
+    <svg width="16" height="16" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #94a3b8; pointer-events: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input class="hdr-search" type="text" placeholder="Search projects, articles, inquiries..." style="width: 100%; box-sizing: border-box; background: #090d16; border: 1px solid #1e293b; border-radius: 10px; padding: 8px 12px 8px 36px; color: #fff; font-size: 13.5px; outline: none;"/>  
+  </div>
+
+  <div class="hdr-right" style="display: flex; align-items: center; gap: 12px;">
+    <a href="http://127.0.0.1:5500/portfolio-main/index.html" target="_blank" rel="noopener noreferrer" class="live-link-btn" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 12.5px; font-weight: 600; text-decoration: none;">
+      <svg width="15" height="15" style="width: 15px; height: 15px; min-width: 15px; min-height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+      <span>Live Portfolio</span>
+    </a>
+
+    <div style="position: relative;" *ngIf="authService.currentUser$ | async as user">
+      <div class="prof-btn" (click)="toggleProfile()" style="display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; background: #1e293b; border: 1px solid #334155; cursor: pointer;">
+        <div class="prof-av" style="width: 28px; height: 28px; min-width: 28px; border-radius: 8px; background: #2563eb; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">
+          {{ user.fullName ? user.fullName[0] : (user.email ? user.email[0].toUpperCase() : 'A') }}
+        </div>
+        <span class="prof-name" style="font-size: 13px; font-weight: 600; color: #fff;">{{ user.fullName || user.email }}</span>
+        <svg width="14" height="14" style="width: 14px; height: 14px; color: #94a3b8;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+
+      <div class="dd-menu" [class.open]="isProfileOpen()" style="position: absolute; right: 0; top: calc(100% + 8px); width: 220px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); padding: 8px; z-index: 100;">
+        <div style="padding: 8px 12px; border-bottom: 1px solid #1e293b; margin-bottom: 4px;">
+          <div style="font-size: 13px; font-weight: 700; color: #fff;">{{ user.fullName }}</div>
+          <div style="font-size: 11px; color: #94a3b8;">{{ user.email }}</div>
+        </div>
+        <div class="dd-item" (click)="router.navigate(['/profile']); isProfileOpen.set(false)" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 13px; color: #cbd5e1; cursor: pointer;">
+          <svg width="15" height="15" style="width: 15px; height: 15px; min-width: 15px; min-height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile Settings
+        </div>
+        <div class="dd-divider" style="height: 1px; background: #1e293b; margin: 6px 0;"></div>
+        <div class="dd-item danger" (click)="signOut()" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 13px; color: #f87171; cursor: pointer;">
+          <svg width="15" height="15" style="width: 15px; height: 15px; min-width: 15px; min-height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

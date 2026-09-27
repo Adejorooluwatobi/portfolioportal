@@ -1,0 +1,13 @@
+<div id="page-app">
+  <div id="sb-overlay" [class.on]="isMobOpen" (click)="isMobOpen = false"></div>
+
+  <app-sidebar [isOpen]="isMobOpen" [isCollapsed]="isCollapsed"></app-sidebar>
+
+  <main id="main" [style.margin-left]="isCollapsed ? '80px' : (isMob() ? '0' : '260px')">
+    <app-header (toggleSidebar)="handleToggleSidebar()" [pageTitle]="currentPageTitle"></app-header>
+
+    <div id="content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
