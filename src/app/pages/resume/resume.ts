@@ -12,6 +12,7 @@ import {
   SkillItem,
   SkillItemCreateUpdateDto
 } from '../../services/portfolio-admin.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-resume',
@@ -22,6 +23,7 @@ import {
 })
 export class ResumeComponent implements OnInit {
   private adminService = inject(PortfolioAdminService);
+  private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
   // Active top tab
@@ -615,14 +617,10 @@ export class ResumeComponent implements OnInit {
   }
 
   showToast(msg: string, type: 'success' | 'error' = 'success'): void {
-    this.toastMessage = msg;
-    this.toastType = type;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      if (this.toastMessage === msg) {
-        this.toastMessage = null;
-        this.cdr.detectChanges();
-      }
-    }, 4000);
+    if (type === 'success') {
+      this.toast.success(msg);
+    } else {
+      this.toast.error(msg);
+    }
   }
 }

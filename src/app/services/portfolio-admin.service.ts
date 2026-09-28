@@ -356,6 +356,32 @@ export interface SocialLinkCreateUpdateDto {
   isActive: boolean;
 }
 
+export interface DisciplineTagItem {
+  id?: string;
+  disciplineCardId?: string;
+  tagName: string;
+  sortOrder?: number;
+}
+
+export interface DisciplineCardItem {
+  id: string;
+  indexTag: string;
+  icon: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  tags: DisciplineTagItem[];
+}
+
+export interface DisciplineCardCreateUpdateDto {
+  indexTag: string;
+  icon: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  tags: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -543,6 +569,23 @@ export class PortfolioAdminService {
 
   deleteAdminSocial(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin/AdminProfile/socials/${id}`);
+  }
+
+  // --- What I Do / Core Competencies ---
+  getAdminDisciplines(): Observable<DisciplineCardItem[]> {
+    return this.http.get<DisciplineCardItem[]>(`${this.apiUrl}/admin/AdminProfile/disciplines`);
+  }
+
+  createAdminDiscipline(dto: DisciplineCardCreateUpdateDto): Observable<DisciplineCardItem> {
+    return this.http.post<DisciplineCardItem>(`${this.apiUrl}/admin/AdminProfile/disciplines`, dto);
+  }
+
+  updateAdminDiscipline(id: string, dto: DisciplineCardCreateUpdateDto): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/AdminProfile/disciplines/${id}`, dto);
+  }
+
+  deleteAdminDiscipline(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/AdminProfile/disciplines/${id}`);
   }
 
   // Document Upload (CV, etc.)

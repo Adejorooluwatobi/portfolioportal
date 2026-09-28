@@ -6,8 +6,11 @@ import {
   ProfileDetail, 
   HeroSectionDetail, 
   SocialLinkItem, 
-  SocialLinkCreateUpdateDto 
+  SocialLinkCreateUpdateDto,
+  DisciplineCardItem,
+  DisciplineCardCreateUpdateDto
 } from '../../services/portfolio-admin.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,9 +21,10 @@ import {
 })
 export class ProfileComponent implements OnInit {
   private adminService = inject(PortfolioAdminService);
+  private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
-  activeTab: 'details' | 'hero' | 'socials' = 'details';
+  activeTab: 'details' | 'hero' | 'socials' | 'disciplines' = 'details';
 
   // Loading & State
   isLoading = false;
@@ -110,6 +114,39 @@ export class ProfileComponent implements OnInit {
     { label: 'Portfolio / Website', icon: 'globe', defaultUrl: 'https://' }
   ];
 
+  // What I Do (Core Competencies)
+  disciplines: DisciplineCardItem[] = [];
+  isLoadingDisciplines = false;
+  isDisciplineModalOpen = false;
+  isEditingDiscipline = false;
+  selectedDisciplineId: string | null = null;
+  disciplineForm: DisciplineCardCreateUpdateDto = {
+    indexTag: '',
+    icon: 'palette',
+    title: '',
+    description: '',
+    sortOrder: 1,
+    tags: []
+  };
+  newDisciplineTag = '';
+  isSavingDiscipline = false;
+  disciplineToDelete: DisciplineCardItem | null = null;
+  isDeleteDisciplineModalOpen = false;
+  isDeletingDiscipline = false;
+
+  commonIcons = [
+    { label: 'Palette (Design / UI)', value: 'palette' },
+    { label: 'Widgets (Apps / Systems)', value: 'widgets' },
+    { label: 'DNS (Backend / Cloud)', value: 'dns' },
+    { label: 'Rocket (Performance / Speed)', value: 'rocket_launch' },
+    { label: 'Terminal (Code / CLI)', value: 'terminal' },
+    { label: 'Database (Data / SQL)', value: 'database' },
+    { label: 'Security (Auth / Security)', value: 'shield' },
+    { label: 'Code (Frontend / Dev)', value: 'code' },
+    { label: 'Devices (Responsive / Mobile)', value: 'devices' },
+    { label: 'Speed (Optimization)', value: 'speed' }
+  ];
+
   ngOnInit(): void {
     this.loadData();
   }
@@ -139,6 +176,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.loadSocials();
+    this.loadDisciplines();
   }
 
   getImageUrl(url: string | undefined): string {
@@ -374,15 +412,173 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  showToast(msg: string, type: 'success' | 'error' = 'success'): void {
-    this.toastMessage = msg;
-    this.toastType = type;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      if (this.toastMessage === msg) {
-        this.toastMessage = null;
+  // ==========================================
+  // What I Do (Core Competencies) Methods
+  // ==========================================
+
+  loadDisciplines(): void {
+    this.isLoadingDisciplines = true;
+    this.adminService.getAdminDisciplines().subscribe({
+      next: (items) => {
+        this.disciplines = items || [];
+        this.isLoadingDisciplines = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isLoadingDisciplines = false;
+        console.error('Failed to load disciplines:', err);
         this.cdr.detectChanges();
       }
-    }, 4000);
+    });
+  }
+
+  openAddDiscipline(): void {
+    this.isEditingDiscipline = false;
+    this.selectedDisciplineId = null;
+    this.disciplineForm = {
+      indexTag: `0${this.disciplines.length + 1} // DOMAIN`,
+      icon: 'palette',
+      title: '',
+      description: '',
+      sortOrder: this.disciplines.length + 1,
+      tags: []
+    };
+    this.newDisciplineTag = '';
+    this.isDisciplineModalOpen = true;
+  }
+
+  openEditDiscipline(card: DisciplineCardItem, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isEditingDiscipline = true;
+    this.selectedDisciplineId = card.id;
+    this.disciplineForm = {
+      indexTag: card.indexTag || '',
+      icon: card.icon || 'palette',
+      title: card.title || '',
+      description: card.description || '',
+      sortOrder: card.sortOrder || 1,
+      tags: (card.tags || []).map(t => typeof t === 'string' ? t : t.tagName)
+    };
+    this.newDisciplineTag = '';
+    this.isDisciplineModalOpen = true;
+  }
+
+  closeDisciplineModal(): void {
+    this.isDisciplineModalOpen = false;
+    this.selectedDisciplineId = null;
+  }
+
+  addDisciplineTag(): void {
+    const tag = this.newDisciplineTag.trim();
+    if (!tag) return;
+    if (!this.disciplineForm.tags.includes(tag)) {
+      this.disciplineForm.tags.push(tag);
+    }
+    this.newDisciplineTag = '';
+  }
+
+  removeDisciplineTag(index: number): void {
+    if (index >= 0 && index < this.disciplineForm.tags.length) {
+      this.disciplineForm.tags.splice(index, 1);
+    }
+  }
+
+  saveDiscipline(): void {
+    if (!this.disciplineForm.title.trim()) {
+      this.showToast('Title is required.', 'error');
+      return;
+    }
+    if (!this.disciplineForm.description.trim()) {
+      this.showToast('Description is required.', 'error');
+      return;
+    }
+
+    // Auto-commit any unsaved text in tag input
+    if (this.newDisciplineTag.trim()) {
+      this.addDisciplineTag();
+    }
+
+    this.isSavingDiscipline = true;
+
+    if (this.isEditingDiscipline && this.selectedDisciplineId) {
+      this.adminService.updateAdminDiscipline(this.selectedDisciplineId, this.disciplineForm).subscribe({
+        next: () => {
+          this.isSavingDiscipline = false;
+          this.isDisciplineModalOpen = false;
+          this.showToast(`Updated "${this.disciplineForm.title}"`, 'success');
+          this.loadDisciplines();
+        },
+        error: (err) => {
+          this.isSavingDiscipline = false;
+          this.showToast('Failed to update competency: ' + (err.error?.message || err.message), 'error');
+        }
+      });
+    } else {
+      this.adminService.createAdminDiscipline(this.disciplineForm).subscribe({
+        next: () => {
+          this.isSavingDiscipline = false;
+          this.isDisciplineModalOpen = false;
+          this.showToast(`Created "${this.disciplineForm.title}"`, 'success');
+          this.loadDisciplines();
+        },
+        error: (err) => {
+          this.isSavingDiscipline = false;
+          this.showToast('Failed to create competency: ' + (err.error?.message || err.message), 'error');
+        }
+      });
+    }
+  }
+
+  openDeleteDiscipline(card: DisciplineCardItem, event: Event): void {
+    event.stopPropagation();
+    this.disciplineToDelete = card;
+    this.isDeleteDisciplineModalOpen = true;
+  }
+
+  closeDeleteDisciplineModal(): void {
+    this.isDeleteDisciplineModalOpen = false;
+    this.disciplineToDelete = null;
+  }
+
+  executeDeleteDiscipline(): void {
+    if (!this.disciplineToDelete) return;
+    this.isDeletingDiscipline = true;
+
+    this.adminService.deleteAdminDiscipline(this.disciplineToDelete.id).subscribe({
+      next: () => {
+        this.isDeletingDiscipline = false;
+        this.isDeleteDisciplineModalOpen = false;
+        this.showToast(`Deleted "${this.disciplineToDelete?.title}"`, 'success');
+        this.disciplineToDelete = null;
+        this.loadDisciplines();
+      },
+      error: (err) => {
+        this.isDeletingDiscipline = false;
+        this.showToast('Failed to delete competency: ' + (err.error?.message || err.message), 'error');
+      }
+    });
+  }
+
+  getCleanIcon(icon: string | undefined): string {
+    if (!icon) return 'palette';
+    return icon.trim().toLowerCase();
+  }
+
+  getCardTheme(card: DisciplineCardItem, index: number) {
+    const themes = [
+      { bg: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: 'rgba(59, 130, 246, 0.25)' },
+      { bg: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: 'rgba(16, 185, 129, 0.25)' },
+      { bg: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: 'rgba(168, 85, 247, 0.25)' },
+      { bg: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', border: 'rgba(245, 158, 11, 0.25)' }
+    ];
+    return themes[index % themes.length];
+  }
+
+  showToast(msg: string, type: 'success' | 'error' = 'success'): void {
+    if (type === 'success') {
+      this.toast.success(msg);
+    } else {
+      this.toast.error(msg);
+    }
   }
 }

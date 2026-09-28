@@ -6,6 +6,7 @@ import {
   InquiryItem, 
   InquiryStats 
 } from '../../services/portfolio-admin.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-inquiries',
@@ -16,6 +17,7 @@ import {
 })
 export class InquiriesComponent implements OnInit {
   private adminService = inject(PortfolioAdminService);
+  private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
   // Data
@@ -321,12 +323,10 @@ export class InquiriesComponent implements OnInit {
   }
 
   showToast(message: string, type: 'success' | 'error' = 'success'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.toastMessage = null;
-      this.cdr.detectChanges();
-    }, 3500);
+    if (type === 'success') {
+      this.toast.success(message);
+    } else {
+      this.toast.error(message);
+    }
   }
 }
