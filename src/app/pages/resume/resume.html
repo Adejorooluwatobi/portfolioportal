@@ -1,0 +1,694 @@
+<div class="page-container">
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" 
+       [style.background]="toastType === 'success' ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)'"
+       style="position: fixed; top: 24px; right: 24px; z-index: 100; color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(8px); animation: fadeIn 0.2s ease-out;">
+    <svg *ngIf="toastType === 'success'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <svg *ngIf="toastType === 'error'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+    </svg>
+    <span>{{ toastMessage }}</span>
+  </div>
+
+  <!-- Page Header -->
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+        <h1 style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Resume & Experience</h1>
+        <span style="background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); color: #60a5fa; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 20px;">
+          Career Timeline & Skills
+        </span>
+      </div>
+      <p style="font-size: 13.5px; color: #94a3b8;">Curate your career trajectory, engineering positions, academic credentials, and categorized technical skills.</p>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <button 
+        (click)="loadAllData()" 
+        title="Refresh all resume data"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        <span>Refresh All</span>
+      </button>
+
+      <button 
+        *ngIf="activeSection === 'experience'"
+        (click)="openCreateExpModal()"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: all 0.15s;"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add Work Experience</span>
+      </button>
+
+      <button 
+        *ngIf="activeSection === 'education'"
+        (click)="openCreateEduModal()"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 10px; background: linear-gradient(135deg, #0d9488, #14b8a6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(13, 148, 136, 0.4); transition: all 0.15s;"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add Education Entry</span>
+      </button>
+
+      <button 
+        *ngIf="activeSection === 'skills'"
+        (click)="openCreateCatModal()"
+        style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #8b5cf6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4); transition: all 0.15s;"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add Skill Category</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Overview Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
+    <!-- Card 1: Experience -->
+    <div (click)="activeSection = 'experience'" 
+         [style.border-color]="activeSection === 'experience' ? '#3b82f6' : '#1e293b'"
+         style="background: rgba(15, 23, 42, 0.85); border: 1px solid; border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.8px;">Work Experience</div>
+        <div style="font-size: 26px; font-weight: 800; color: #fff;">{{ experiences.length }} Roles</div>
+        <div style="font-size: 12px; color: #60a5fa; font-weight: 500;">Career Timeline</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 2: Education -->
+    <div (click)="activeSection = 'education'" 
+         [style.border-color]="activeSection === 'education' ? '#14b8a6' : '#1e293b'"
+         style="background: rgba(15, 23, 42, 0.85); border: 1px solid; border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.8px;">Education & Degrees</div>
+        <div style="font-size: 26px; font-weight: 800; color: #fff;">{{ educations.length }} Credentials</div>
+        <div style="font-size: 12px; color: #2dd4bf; font-weight: 500;">Academic & Certifications</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(20, 184, 166, 0.15); color: #2dd4bf; display: flex; align-items: center; justify-content: center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+      </div>
+    </div>
+
+    <!-- Card 3: Skills -->
+    <div (click)="activeSection = 'skills'" 
+         [style.border-color]="activeSection === 'skills' ? '#8b5cf6' : '#1e293b'"
+         style="background: rgba(15, 23, 42, 0.85); border: 1px solid; border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.8px;">Skill Categories</div>
+        <div style="font-size: 26px; font-weight: 800; color: #fff;">{{ skillCategories.length }} Categories</div>
+        <div style="font-size: 12px; color: #c084fc; font-weight: 500;">Technical Skill Matrix</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(139, 92, 246, 0.15); color: #c084fc; display: flex; align-items: center; justify-content: center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation Switcher -->
+  <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 6px; margin-bottom: 24px; display: flex; gap: 6px;">
+    <button 
+      (click)="activeSection = 'experience'"
+      [style.background]="activeSection === 'experience' ? '#2563eb' : 'transparent'"
+      [style.color]="activeSection === 'experience' ? '#fff' : '#94a3b8'"
+      style="flex: 1; padding: 10px 16px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <span>1. Work Experience ({{ experiences.length }})</span>
+    </button>
+
+    <button 
+      (click)="activeSection = 'education'"
+      [style.background]="activeSection === 'education' ? '#0d9488' : 'transparent'"
+      [style.color]="activeSection === 'education' ? '#fff' : '#94a3b8'"
+      style="flex: 1; padding: 10px 16px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+      <span>2. Education & Degrees ({{ educations.length }})</span>
+    </button>
+
+    <button 
+      (click)="activeSection = 'skills'"
+      [style.background]="activeSection === 'skills' ? '#7c3aed' : 'transparent'"
+      [style.color]="activeSection === 'skills' ? '#fff' : '#94a3b8'"
+      style="flex: 1; padding: 10px 16px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      <span>3. Skills Matrix ({{ skillCategories.length }} Categories)</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; padding: 80px 0;">
+    <div style="width: 44px; height: 44px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+  </div>
+
+  <!-- ================= SECTION 1: WORK EXPERIENCE ================= -->
+  <div *ngIf="!isLoading && activeSection === 'experience'">
+    <!-- Search Bar for Experience -->
+    <div style="position: relative; margin-bottom: 20px;">
+      <svg width="16" height="16" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (input)="applyFilter()"
+        placeholder="Filter experience by job title, company name, or technology..."
+        style="width: 100%; padding: 10px 14px 10px 42px; background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 12px; color: #fff; font-size: 13.5px; outline: none;"
+      />
+    </div>
+
+    <!-- Experience Cards List -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div *ngFor="let exp of filteredExperiences" 
+           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        
+        <!-- Header row -->
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+              <h3 style="font-size: 17px; font-weight: 700; color: #fff;">{{ exp.jobTitle }}</h3>
+              <span *ngIf="exp.isCurrent" 
+                    style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                ● Current Role
+              </span>
+              <span *ngIf="exp.employmentType" 
+                    style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px;">
+                {{ exp.employmentType }}
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #60a5fa; font-weight: 600;">
+              <span>{{ exp.companyName }}</span>
+              <span style="color: #64748b;">•</span>
+              <span style="color: #94a3b8; font-weight: 500;">{{ exp.dateRange }}</span>
+              <span style="color: #64748b;">•</span>
+              <span style="color: #64748b; font-size: 12px;">Order: {{ exp.sortOrder }}</span>
+            </div>
+          </div>
+
+          <!-- Edit & Delete -->
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button 
+              (click)="openEditExpModal(exp)"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); color: #60a5fa; font-size: 12px; font-weight: 600; cursor: pointer;"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit</span>
+            </button>
+
+            <button 
+              (click)="openDeleteConfirm('experience', exp.id, exp.jobTitle + ' at ' + exp.companyName, $event)"
+              title="Delete Experience"
+              style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); display: flex; align-items: center; justify-content: center; color: #f87171; cursor: pointer;"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin: 0;">
+          {{ exp.description }}
+        </p>
+
+        <!-- Technologies tags -->
+        <div *ngIf="exp.technologies && exp.technologies.length > 0" style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span 
+            *ngFor="let t of exp.technologies"
+            style="background: #1e293b; color: #94a3b8; border: 1px solid #334155; font-size: 11.5px; font-weight: 500; padding: 3px 9px; border-radius: 6px;"
+          >
+            {{ t.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 2: EDUCATION & CREDENTIALS ================= -->
+  <div *ngIf="!isLoading && activeSection === 'education'">
+    <!-- Search Bar for Education -->
+    <div style="position: relative; margin-bottom: 20px;">
+      <svg width="16" height="16" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (input)="applyFilter()"
+        placeholder="Filter credentials by degree, institution, or location..."
+        style="width: 100%; padding: 10px 14px 10px 42px; background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 12px; color: #fff; font-size: 13.5px; outline: none;"
+      />
+    </div>
+
+    <!-- Education Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px;">
+      <div *ngFor="let edu of filteredEducations"
+           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        
+        <div>
+          <!-- Header -->
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(20, 184, 166, 0.15); color: #2dd4bf; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+              </div>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 700; color: #fff;">{{ edu.degreeTitle }}</h3>
+                <span style="background: rgba(20, 184, 166, 0.15); border: 1px solid rgba(20, 184, 166, 0.3); color: #2dd4bf; font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 4px;">
+                  {{ edu.credentialType || 'Degree' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button 
+                (click)="openEditEduModal(edu)"
+                style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 8px; background: rgba(20, 184, 166, 0.15); border: 1px solid rgba(20, 184, 166, 0.3); color: #2dd4bf; font-size: 12px; font-weight: 600; cursor: pointer;"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span>Edit</span>
+              </button>
+
+              <button 
+                (click)="openDeleteConfirm('education', edu.id, edu.degreeTitle, $event)"
+                title="Delete Education"
+                style="width: 28px; height: 28px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); display: flex; align-items: center; justify-content: center; color: #f87171; cursor: pointer;"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div style="font-size: 13px; color: #cbd5e1; font-weight: 600; margin-bottom: 2px;">{{ edu.institutionName }}</div>
+          <div style="font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span *ngIf="edu.location">{{ edu.location }}</span>
+            <span *ngIf="edu.location">•</span>
+            <span>{{ edu.dateRange }}</span>
+          </div>
+
+          <p *ngIf="edu.description" style="font-size: 12.5px; color: #94a3b8; line-height: 1.5; margin: 0;">
+            {{ edu.description }}
+          </p>
+        </div>
+
+        <div style="font-size: 11px; color: #64748b; padding-top: 10px; border-top: 1px solid #1e293b;">
+          Display Order: {{ edu.sortOrder }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 3: SKILLS & TECHNICAL MATRIX ================= -->
+  <div *ngIf="!isLoading && activeSection === 'skills'">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div *ngFor="let cat of skillCategories" 
+           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        
+        <!-- Category Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #1e293b;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3 style="font-size: 18px; font-weight: 700; color: #fff;">{{ cat.title }}</h3>
+              <span style="background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.3); color: #c084fc; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                {{ cat.skills ? cat.skills.length : 0 }} Skills
+              </span>
+            </div>
+            <p style="font-size: 12.5px; color: #94a3b8; margin: 2px 0 0;">{{ cat.subtitle || 'Technical competencies & frameworks' }}</p>
+          </div>
+
+          <!-- Category Actions -->
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button 
+              (click)="openAddSkillModal(cat)"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.3); color: #c084fc; font-size: 12px; font-weight: 600; cursor: pointer;"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Add Skill</span>
+            </button>
+
+            <button 
+              (click)="openEditCatModal(cat)"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer;"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit Category</span>
+            </button>
+
+            <button 
+              (click)="openDeleteConfirm('skillCategory', cat.id, cat.title, $event)"
+              title="Delete Category"
+              style="width: 30px; height: 30px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); display: flex; align-items: center; justify-content: center; color: #f87171; cursor: pointer;"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Skills Grid Inside Category -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+          <div *ngFor="let s of cat.skills"
+               style="background: #090d16; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ s.name }}</span>
+                <span *ngIf="s.isPrimary" style="color: #f59e0b; font-size: 12px;" title="Primary Skill">★</span>
+              </div>
+              <div *ngIf="s.proficiencyPercent" style="font-size: 11px; color: #64748b;">
+                Proficiency: {{ s.proficiencyPercent }}%
+              </div>
+            </div>
+
+            <!-- Skill inline actions -->
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <button 
+                (click)="openEditSkillModal(cat, s)"
+                title="Edit Skill"
+                style="border: none; background: transparent; color: #94a3b8; cursor: pointer; padding: 4px;"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+
+              <button 
+                (click)="openDeleteConfirm('skillItem', s.id, s.name, $event)"
+                title="Delete Skill"
+                style="border: none; background: transparent; color: #f87171; cursor: pointer; padding: 4px;"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Add Skill Tile -->
+          <div (click)="openAddSkillModal(cat)"
+               style="background: rgba(30, 41, 59, 0.4); border: 1px dashed #334155; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; color: #94a3b8; font-size: 12.5px; font-weight: 600; transition: all 0.15s;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Add Skill</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= WORK EXPERIENCE MODAL DRAWER ================= -->
+  <div *ngIf="isExpModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: flex-end; animation: fadeIn 0.2s ease-out;">
+    <div style="width: 100%; max-width: 620px; height: 100vh; background: #0b1120; border-left: 1px solid #1e293b; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5); animation: slideLeft 0.25s ease-out;">
+      
+      <!-- Header -->
+      <div style="padding: 18px 24px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between; background: #090d16;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 2px;">
+            {{ isEditingExp ? 'Edit Work Experience' : 'Add Work Experience' }}
+          </h2>
+          <p style="font-size: 12px; color: #94a3b8;">Enter job title, company, dates, achievements, and tech stack.</p>
+        </div>
+        <button (click)="closeExpModal()" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid #334155; color: #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Job Title <span style="color: #f87171;">*</span></label>
+            <input type="text" [(ngModel)]="expJobTitle" placeholder="e.g. Senior Software Developer" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Company Name <span style="color: #f87171;">*</span></label>
+            <input type="text" [(ngModel)]="expCompanyName" placeholder="e.g. Cytech Consult" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Date Range</label>
+            <input type="text" [(ngModel)]="expDateRange" placeholder="e.g. 2024 — Present" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Employment Type</label>
+            <select [(ngModel)]="expEmploymentType" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;">
+              <option value="Full-Time">Full-Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Remote">Remote</option>
+              <option value="Part-Time">Part-Time</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Role Description & Key Accomplishments</label>
+          <textarea rows="4" [(ngModel)]="expDescription" placeholder="Summarize core architectural responsibilities and measurable impact..." style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; resize: vertical;"></textarea>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 4px;">Technologies & Frameworks</label>
+          <span style="display: block; font-size: 11px; color: #64748b; margin-bottom: 6px;">Comma-separated (e.g. React 18, NestJS, ASP.NET Core, PostgreSQL, CI/CD)</span>
+          <input type="text" [(ngModel)]="expTechsInput" placeholder="React 18, NestJS, ASP.NET Core" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 14px; background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 12px;">
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 4px;">Sort Order</label>
+            <input type="number" [(ngModel)]="expSortOrder" style="width: 100%; padding: 6px 10px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 13px;" />
+          </div>
+
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <label style="font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 6px;">Active Position</label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" [(ngModel)]="expIsCurrent" style="width: 16px; height: 16px; accent-color: #2563eb;" />
+              <span style="font-size: 12px; font-weight: 600; color: #fff;">Currently Working Here</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding: 16px 24px; border-top: 1px solid #1e293b; background: #090d16; display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+        <button (click)="closeExpModal()" style="padding: 9px 18px; border-radius: 10px; background: transparent; border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="saveExperience()" [disabled]="isSaving" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 24px; border-radius: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;">
+          <div *ngIf="isSaving" style="width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <span>{{ isSaving ? 'Saving...' : (isEditingExp ? 'Save Changes' : 'Add Experience') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EDUCATION MODAL DRAWER ================= -->
+  <div *ngIf="isEduModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: flex-end; animation: fadeIn 0.2s ease-out;">
+    <div style="width: 100%; max-width: 600px; height: 100vh; background: #0b1120; border-left: 1px solid #1e293b; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5); animation: slideLeft 0.25s ease-out;">
+      
+      <!-- Header -->
+      <div style="padding: 18px 24px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between; background: #090d16;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 2px;">
+            {{ isEditingEdu ? 'Edit Education & Credential' : 'Add Education & Credential' }}
+          </h2>
+          <p style="font-size: 12px; color: #94a3b8;">Enter degree, institution name, location, and dates.</p>
+        </div>
+        <button (click)="closeEduModal()" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid #334155; color: #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Degree / Certification Title <span style="color: #f87171;">*</span></label>
+          <input type="text" [(ngModel)]="eduDegreeTitle" placeholder="e.g. B.Sc. Computer Science" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Institution Name <span style="color: #f87171;">*</span></label>
+          <input type="text" [(ngModel)]="eduInstitutionName" placeholder="e.g. National Open University of Nigeria (NOUN)" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Location</label>
+            <input type="text" [(ngModel)]="eduLocation" placeholder="e.g. Lagos, Nigeria" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Date Range</label>
+            <input type="text" [(ngModel)]="eduDateRange" placeholder="e.g. 2021 — 2024" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Credential Type</label>
+            <select [(ngModel)]="eduCredentialType" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;">
+              <option value="Degree">Degree</option>
+              <option value="Certification">Certification</option>
+              <option value="Bootcamp">Bootcamp / Diploma</option>
+              <option value="Secondary">Secondary</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Sort Order</label>
+            <input type="number" [(ngModel)]="eduSortOrder" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Description / Field of Study</label>
+          <textarea rows="3" [(ngModel)]="eduDescription" placeholder="Specialization, curriculum highlights, or relevant achievements..." style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; resize: vertical;"></textarea>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding: 16px 24px; border-top: 1px solid #1e293b; background: #090d16; display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+        <button (click)="closeEduModal()" style="padding: 9px 18px; border-radius: 10px; background: transparent; border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="saveEducation()" [disabled]="isSaving" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 24px; border-radius: 10px; background: linear-gradient(135deg, #0d9488, #14b8a6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;">
+          <div *ngIf="isSaving" style="width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <span>{{ isSaving ? 'Saving...' : (isEditingEdu ? 'Save Changes' : 'Add Credential') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SKILL CATEGORY MODAL DRAWER ================= -->
+  <div *ngIf="isCatModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: flex-end; animation: fadeIn 0.2s ease-out;">
+    <div style="width: 100%; max-width: 520px; height: 100vh; background: #0b1120; border-left: 1px solid #1e293b; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5); animation: slideLeft 0.25s ease-out;">
+      
+      <!-- Header -->
+      <div style="padding: 18px 24px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between; background: #090d16;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 2px;">
+            {{ isEditingCat ? 'Edit Skill Category' : 'Add Skill Category' }}
+          </h2>
+          <p style="font-size: 12px; color: #94a3b8;">Group skills into distinct architectural domains.</p>
+        </div>
+        <button (click)="closeCatModal()" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid #334155; color: #cbd5e1; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Category Title <span style="color: #f87171;">*</span></label>
+          <input type="text" [(ngModel)]="catTitle" placeholder="e.g. Frontend Ecosystem or Cloud & DevOps" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Subtitle / Purpose</label>
+          <input type="text" [(ngModel)]="catSubtitle" placeholder="e.g. Client interfaces, SPA architecture & interaction" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Accent Token</label>
+            <select [(ngModel)]="catAccentColorToken" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;">
+              <option value="primary">Primary (Blue)</option>
+              <option value="purple">Purple / Violet</option>
+              <option value="teal">Teal / Emerald</option>
+              <option value="amber">Amber / Orange</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Sort Order</label>
+            <input type="number" [(ngModel)]="catSortOrder" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding: 16px 24px; border-top: 1px solid #1e293b; background: #090d16; display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+        <button (click)="closeCatModal()" style="padding: 9px 18px; border-radius: 10px; background: transparent; border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="saveSkillCategory()" [disabled]="isSaving" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 24px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #8b5cf6); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;">
+          <div *ngIf="isSaving" style="width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <span>{{ isSaving ? 'Saving...' : (isEditingCat ? 'Save Changes' : 'Create Category') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SKILL ITEM MODAL ================= -->
+  <div *ngIf="isSkillModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 105; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="width: 100%; max-width: 440px; background: #0b1120; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); animation: scaleUp 0.15s ease-out;">
+      
+      <h3 style="font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px;">
+        {{ isEditingSkill ? 'Edit Skill' : 'Add New Skill' }}
+      </h3>
+      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 18px;">
+        Adding to <strong style="color: #c084fc;">{{ targetCategoryTitle }}</strong>
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px;">
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Skill Name <span style="color: #f87171;">*</span></label>
+          <input type="text" [(ngModel)]="skillName" placeholder="e.g. Angular 21 or PostgreSQL" style="width: 100%; padding: 8px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Proficiency (%)</label>
+            <input type="number" [(ngModel)]="skillProficiency" min="1" max="100" placeholder="90" style="width: 100%; padding: 8px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Sort Order</label>
+            <input type="number" [(ngModel)]="skillSortOrder" style="width: 100%; padding: 8px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px;">
+            <input type="checkbox" [(ngModel)]="skillIsPrimary" style="width: 16px; height: 16px; accent-color: #7c3aed;" />
+            <span style="font-size: 12px; font-weight: 600; color: #fff;">Featured / Primary Competency</span>
+          </label>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button (click)="closeSkillModal()" style="padding: 8px 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 12.5px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="saveSkillItem()" [disabled]="isSaving" style="padding: 8px 20px; border-radius: 8px; background: #7c3aed; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;">
+          {{ isSaving ? 'Saving...' : (isEditingSkill ? 'Save Changes' : 'Add Skill') }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= DELETE CONFIRMATION MODAL ================= -->
+  <div *ngIf="isDeleteModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); z-index: 120; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    
+    <div style="width: 100%; max-width: 440px; background: #0b1120; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); animation: scaleUp 0.15s ease-out;">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+
+      <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px;">Delete Item</h3>
+      <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">
+        Are you sure you want to delete <strong style="color: #fff;">{{ itemToDeleteTitle }}</strong>? This action cannot be undone.
+      </p>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button (click)="closeDeleteModal()" style="padding: 8px 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="executeDelete()" [disabled]="isDeleting" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 8px; background: #dc2626; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
+          <div *ngIf="isDeleting" style="width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <span>{{ isDeleting ? 'Deleting...' : 'Delete Permanently' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -26,12 +26,22 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    const saved = localStorage.getItem('portfolio_current_user');
+    // Clean up any legacy localStorage tokens from past sessions so user always logs in fresh
+    localStorage.removeItem('portfolio_current_user');
+    localStorage.removeItem('portfolio_auth_token');
+
+    // Retrieve active session from sessionStorage
+    const saved = sessionStorage.getItem('portfolio_current_user');
     if (saved) {
       try {
-        this.currentUserSubject.next(JSON.parse(saved));
+        const user = JSON.parse(saved);
+        if (this.isTokenValid(user)) {
+          this.currentUserSubject.next(user);
+        } else {
+          this.clearSession();
+        }
       } catch {
-        localStorage.removeItem('portfolio_current_user');
+        this.clearSession();
       }
     }
   }
@@ -40,8 +50,8 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(res => {
         if (res && res.token) {
-          localStorage.setItem('portfolio_current_user', JSON.stringify(res));
-          localStorage.setItem('portfolio_auth_token', res.token);
+          sessionStorage.setItem('portfolio_current_user', JSON.stringify(res));
+          sessionStorage.setItem('portfolio_auth_token', res.token);
           this.currentUserSubject.next(res);
         }
       })
@@ -49,18 +59,52 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('portfolio_current_user');
-    localStorage.removeItem('portfolio_auth_token');
-    this.currentUserSubject.next(null);
+    this.clearSession();
     this.router.navigate(['/login']);
   }
 
+  private clearSession(): void {
+    sessionStorage.removeItem('portfolio_current_user');
+    sessionStorage.removeItem('portfolio_auth_token');
+    localStorage.removeItem('portfolio_current_user');
+    localStorage.removeItem('portfolio_auth_token');
+    this.currentUserSubject.next(null);
+  }
+
   isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value?.token;
+    const user = this.currentUserSubject.value;
+    return !!user && this.isTokenValid(user);
+  }
+
+  private isTokenValid(user: LoginResponse): boolean {
+    if (!user || !user.token) return false;
+
+    // 1. Check ISO expiration timestamp if provided
+    if (user.expiresAt) {
+      const expDate = new Date(user.expiresAt).getTime();
+      if (!isNaN(expDate) && Date.now() >= expDate) {
+        return false;
+      }
+    }
+
+    // 2. Decode JWT exp claim as a fallback check
+    try {
+      const payloadBase64 = user.token.split('.')[1];
+      if (payloadBase64) {
+        const decoded = JSON.parse(atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/')));
+        if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+          return false;
+        }
+      }
+    } catch {
+      // Continue if decode fails
+    }
+
+    return true;
   }
 
   getToken(): string | null {
-    return this.currentUserSubject.value?.token || localStorage.getItem('portfolio_auth_token') || null;
+    return this.currentUserSubject.value?.token || sessionStorage.getItem('portfolio_auth_token') || null;
   }
 
   getCurrentUser(): LoginResponse | null {

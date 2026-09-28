@@ -1,16 +1,16 @@
-<div style="max-width: 1400px; margin: 0 auto;">
+<div class="page-container">
   <!-- Page Header -->
-  <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 24px;">
     <div>
-      <h1 style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 4px;">{{ greeting }}</h1>
-      <p style="font-size: 13.5px; color: #94a3b8;">Here is an overview of your portfolio metrics and incoming inquiries today.</p>
+      <h1 style="font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 4px;">{{ greeting }}</h1>
+      <p style="font-size: 13.5px; color: var(--muted); margin: 0;">Here is an overview of your portfolio metrics and incoming inquiries today.</p>
     </div>
     <div style="display: flex; gap: 10px;">
       <button 
         (click)="loadDashboardData()"
-        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 9px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;"
       >
-        <svg width="14" height="14" style="width: 14px; height: 14px; min-width: 14px; min-height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
         </svg>
         <span>Sync Live Stats</span>
@@ -20,117 +20,117 @@
 
   <!-- Loading Indicator -->
   <div *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center; padding: 80px 0;">
-    <div style="width: 40px; height: 40px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <div style="width: 40px; height: 40px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite;"></div>
   </div>
 
   <!-- Stats Grid -->
   <div *ngIf="!isLoading">
-    <div class="stat-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 24px;">
+    <div class="stat-grid">
       <!-- Card 1: Projects -->
-      <div class="stat-card" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div class="stat-ico blue" style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="stat-card">
+        <div class="stat-ico blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
           </svg>
         </div>
-        <div class="stat-val" style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 2px;">{{ projectsCount }}</div>
-        <div class="stat-lbl" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 6px;">Featured Projects</div>
-        <div class="stat-change up" style="font-size: 12px; font-weight: 600; color: #34d399; display: flex; align-items: center; gap: 4px;">
-          <svg width="14" height="14" style="width: 14px; height: 14px; min-width: 14px; min-height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <div class="stat-val">{{ projectsCount }}</div>
+        <div class="stat-lbl">Featured Projects</div>
+        <div class="stat-change up" style="color: var(--success);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           <span>Production Web & Cloud APIs</span>
         </div>
       </div>
 
       <!-- Card 2: Experience -->
-      <div class="stat-card" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div class="stat-ico purple" style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="stat-card">
+        <div class="stat-ico purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
           </svg>
         </div>
-        <div class="stat-val" style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 2px;">{{ experienceTenure }} Years</div>
-        <div class="stat-lbl" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 6px;">Engineering Tenure</div>
-        <div class="stat-change up" style="font-size: 12px; font-weight: 600; color: #34d399; display: flex; align-items: center; gap: 4px;">
-          <svg width="14" height="14" style="width: 14px; height: 14px; min-width: 14px; min-height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <div class="stat-val">{{ experienceTenure }} Years</div>
+        <div class="stat-lbl">Engineering Tenure</div>
+        <div class="stat-change up" style="color: var(--accent2);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           <span>Fullstack Enterprise Systems</span>
         </div>
       </div>
 
       <!-- Card 3: Articles -->
-      <div class="stat-card" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div class="stat-ico cyan" style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: rgba(6, 182, 212, 0.15); color: #22d3ee;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="stat-card">
+        <div class="stat-ico cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
           </svg>
         </div>
-        <div class="stat-val" style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 2px;">{{ articlesCount }}</div>
-        <div class="stat-lbl" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 6px;">Technical Articles</div>
-        <div class="stat-change up" style="font-size: 12px; font-weight: 600; color: #34d399; display: flex; align-items: center; gap: 4px;">
-          <svg width="14" height="14" style="width: 14px; height: 14px; min-width: 14px; min-height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <div class="stat-val">{{ articlesCount }}</div>
+        <div class="stat-lbl">Technical Articles</div>
+        <div class="stat-change up" style="color: var(--accent3);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           <span>Guides & Architecture Posts</span>
         </div>
       </div>
 
       <!-- Card 4: Inquiries -->
-      <div class="stat-card" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div class="stat-ico amber" style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="stat-card">
+        <div class="stat-ico amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
           </svg>
         </div>
-        <div class="stat-val" style="font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 2px;">{{ inquiryStats.totalCount }}</div>
-        <div class="stat-lbl" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 6px;">Inquiries Received</div>
-        <div class="stat-change" [style.color]="inquiryStats.unreadCount > 0 ? '#fbbf24' : '#94a3b8'" style="font-size: 12px; font-weight: 600;">
+        <div class="stat-val">{{ inquiryStats.totalCount }}</div>
+        <div class="stat-lbl">Inquiries Received</div>
+        <div class="stat-change" [style.color]="inquiryStats.unreadCount > 0 ? 'var(--gold)' : 'var(--muted)'" style="font-size: 12px; font-weight: 600;">
           <span>{{ inquiryStats.unreadCount }} Unread Message(s)</span>
         </div>
       </div>
     </div>
 
     <!-- Quick Actions Banner -->
-    <div class="card card-pad" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+    <div class="card card-pad" style="margin-bottom: 24px;">
       <div style="margin-bottom: 16px;">
-        <h3 class="card-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px;">Quick Administration Actions</h3>
-        <p class="card-sub" style="font-size: 12.5px; color: #94a3b8;">Frequent shortcuts to manage content and inspect telemetry</p>
+        <h3 class="card-title">Quick Administration Actions</h3>
+        <p class="card-sub">Frequent shortcuts to manage content and inspect telemetry</p>
       </div>
 
-      <div class="qa-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
-        <div class="qa-btn" (click)="router.navigate(['/projects'])" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="qa-grid">
+        <div class="qa-btn" (click)="router.navigate(['/projects'])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
           <span>Manage Projects</span>
         </div>
 
-        <div class="qa-btn" (click)="router.navigate(['/articles'])" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="qa-btn" (click)="router.navigate(['/articles'])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
           <span>Manage Articles</span>
         </div>
 
-        <div class="qa-btn" (click)="router.navigate(['/resume'])" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="qa-btn" (click)="router.navigate(['/resume'])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
           </svg>
           <span>Update Resume</span>
         </div>
 
-        <div class="qa-btn" (click)="router.navigate(['/profile'])" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="qa-btn" (click)="router.navigate(['/profile'])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
           <span>Edit Profile</span>
         </div>
 
-        <div class="qa-btn" (click)="router.navigate(['/inquiries'])" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="qa-btn" (click)="router.navigate(['/inquiries'])">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
           </svg>
           <span>View Inquiries</span>
         </div>
 
-        <a class="qa-btn" href="http://127.0.0.1:5500/portfolio-main/index.html" target="_blank" rel="noopener noreferrer" style="background: #090d16; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: #cbd5e1; cursor: pointer; text-decoration: none;">
-          <svg width="22" height="22" style="width: 22px; height: 22px; min-width: 22px; min-height: 22px; color: #60a5fa;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a class="qa-btn" href="http://127.0.0.1:5500/portfolio-main/index.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
           <span>Live Site Preview</span>
@@ -139,42 +139,42 @@
     </div>
 
     <!-- Dual Column: Recent Inquiries & System Telemetry -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px;">
       <!-- Left: Recent Inquiries -->
-      <div class="card card-pad" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div class="card card-pad">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
           <div>
-            <h3 class="card-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px;">Recent Contact Inquiries</h3>
-            <p class="card-sub" style="font-size: 12.5px; color: #94a3b8;">Messages submitted through portfolio contact form</p>
+            <h3 class="card-title">Recent Contact Inquiries</h3>
+            <p class="card-sub">Messages submitted through portfolio contact form</p>
           </div>
-          <button (click)="router.navigate(['/inquiries'])" style="background: none; border: none; font-size: 12.5px; color: #3b82f6; font-weight: 600; cursor: pointer;">
+          <button (click)="router.navigate(['/inquiries'])" style="background: none; border: none; font-size: 12.5px; color: var(--accent); font-weight: 600; cursor: pointer;">
             View All →
           </button>
         </div>
 
-        <div *ngIf="recentInquiries.length === 0" style="padding: 40px 16px; text-align: center; color: #94a3b8; font-size: 13px; border: 1px dashed #334155; border-radius: 12px; background: rgba(9, 13, 22, 0.5);">
-          <svg width="36" height="36" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; margin: 0 auto 10px; color: #475569;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <div *ngIf="recentInquiries.length === 0" style="padding: 36px 16px; text-align: center; color: var(--muted); font-size: 13px; border: 1px dashed var(--border); border-radius: 12px; background: var(--surface2);">
+          <svg width="34" height="34" style="margin: 0 auto 8px; color: var(--muted);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
           </svg>
-          <p style="font-weight: 600; color: #cbd5e1; margin-bottom: 2px;">No inquiries recorded yet</p>
-          <p style="font-size: 12px;">Test the contact form on your portfolio to see submissions arrive here in real-time!</p>
+          <p style="font-weight: 600; color: var(--text); margin-bottom: 2px;">No inquiries recorded yet</p>
+          <p style="font-size: 12px; margin: 0;">Submissions through your portfolio will arrive here in real-time.</p>
         </div>
 
         <div *ngIf="recentInquiries.length > 0" style="display: flex; flex-direction: column; gap: 10px;">
-          <div *ngFor="let item of recentInquiries" style="padding: 14px; border-radius: 12px; background: #090d16; border: 1px solid #1e293b; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+          <div *ngFor="let item of recentInquiries" style="padding: 12px 14px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
             <div style="flex: 1; min-width: 0;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="font-size: 13.5px; font-weight: 700; color: #fff;">{{ item.senderName }}</span>
-                <span *ngIf="!item.isRead" style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">NEW</span>
+                <span style="font-size: 13.5px; font-weight: 700; color: var(--text);">{{ item.senderName }}</span>
+                <span *ngIf="!item.isRead" style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.3);">NEW</span>
               </div>
-              <div style="font-size: 12px; color: #94a3b8; margin-bottom: 6px;">{{ item.senderEmail }} &bull; {{ item.submittedAt | date:'mediumDate' }}</div>
-              <p style="font-size: 12.5px; color: #cbd5e1; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">{{ item.message }}</p>
+              <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">{{ item.senderEmail }} &bull; {{ item.submittedAt | date:'mediumDate' }}</div>
+              <p style="font-size: 12.5px; color: var(--text2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">{{ item.message }}</p>
             </div>
 
             <button 
               *ngIf="!item.isRead" 
               (click)="markAsRead(item)"
-              style="padding: 6px 12px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; font-size: 11.5px; font-weight: 600; cursor: pointer; flex-shrink: 0;"
+              style="padding: 5px 10px; border-radius: 7px; background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.25); color: var(--accent); font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0;"
             >
               Mark Read
             </button>
@@ -183,55 +183,55 @@
       </div>
 
       <!-- Right: System & Infrastructure Telemetry -->
-      <div class="card card-pad" style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 22px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div class="card card-pad">
         <div style="margin-bottom: 16px;">
-          <h3 class="card-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 2px;">Production Infrastructure</h3>
-          <p class="card-sub" style="font-size: 12.5px; color: #94a3b8;">Architecture and backend microservice health status</p>
+          <h3 class="card-title">Production Infrastructure</h3>
+          <p class="card-sub">Architecture and backend microservice health status</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div style="padding: 12px 14px; border-radius: 10px; background: #090d16; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="padding: 12px 14px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <div style="width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
               <div>
-                <div style="font-size: 13px; font-weight: 600; color: #fff;">ASP.NET Core 10 Web API</div>
-                <div style="font-size: 11px; color: #94a3b8;">http://localhost:5024/api</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">ASP.NET Core 10 Web API</div>
+                <div style="font-size: 11px; color: var(--muted);">http://localhost:5024/api</div>
               </div>
             </div>
-            <span style="font-size: 11.5px; font-weight: 700; color: #10b981;">ONLINE</span>
+            <span style="font-size: 11px; font-weight: 700; color: var(--success);">ONLINE</span>
           </div>
 
-          <div style="padding: 12px 14px; border-radius: 10px; background: #090d16; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between;">
+          <div style="padding: 12px 14px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <div style="width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
               <div>
-                <div style="font-size: 13px; font-weight: 600; color: #fff;">PostgreSQL Database</div>
-                <div style="font-size: 11px; color: #94a3b8;">portfolio_db on port 5432</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">PostgreSQL Database</div>
+                <div style="font-size: 11px; color: var(--muted);">portfolio_db on port 5432</div>
               </div>
             </div>
-            <span style="font-size: 11.5px; font-weight: 700; color: #10b981;">CONNECTED</span>
+            <span style="font-size: 11px; font-weight: 700; color: var(--success);">CONNECTED</span>
           </div>
 
-          <div style="padding: 12px 14px; border-radius: 10px; background: #090d16; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between;">
+          <div style="padding: 12px 14px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <div style="width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #3b82f6;"></div>
               <div>
-                <div style="font-size: 13px; font-weight: 600; color: #fff;">JWT Bearer Authentication</div>
-                <div style="font-size: 11px; color: #94a3b8;">120-minute sliding session</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">JWT Bearer Authentication</div>
+                <div style="font-size: 11px; color: var(--muted);">120-minute sliding session</div>
               </div>
             </div>
-            <span style="font-size: 11.5px; font-weight: 700; color: #60a5fa;">SECURED</span>
+            <span style="font-size: 11px; font-weight: 700; color: var(--accent);">SECURED</span>
           </div>
 
-          <div style="padding: 12px 14px; border-radius: 10px; background: #090d16; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: space-between;">
+          <div style="padding: 12px 14px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <div style="width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6;"></div>
               <div>
-                <div style="font-size: 13px; font-weight: 600; color: #fff;">Interactive Scalar UI</div>
-                <div style="font-size: 11px; color: #94a3b8;">http://localhost:5024/scalar/v1</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text);">Interactive Scalar UI</div>
+                <div style="font-size: 11px; color: var(--muted);">http://localhost:5024/scalar/v1</div>
               </div>
             </div>
-            <a href="http://localhost:5024/scalar/v1" target="_blank" rel="noopener noreferrer" style="font-size: 11.5px; font-weight: 700; color: #a78bfa; text-decoration: none;">OPEN →</a>
+            <a href="http://localhost:5024/scalar/v1" target="_blank" rel="noopener noreferrer" style="font-size: 11.5px; font-weight: 700; color: var(--accent2); text-decoration: none;">OPEN →</a>
           </div>
         </div>
       </div>

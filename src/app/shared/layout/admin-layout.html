@@ -3,7 +3,7 @@
 
   <app-sidebar [isOpen]="isMobOpen" [isCollapsed]="isCollapsed"></app-sidebar>
 
-  <main id="main" [style.margin-left]="isCollapsed ? '80px' : (isMob() ? '0' : '260px')">
+  <main id="main" [class.collapsed]="isCollapsed">
     <app-header (toggleSidebar)="handleToggleSidebar()" [pageTitle]="currentPageTitle"></app-header>
 
     <div id="content">
