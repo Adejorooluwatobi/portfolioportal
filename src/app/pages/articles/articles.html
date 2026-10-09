@@ -221,30 +221,60 @@
         <!-- Footer Actions -->
         <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid #1e293b;">
           <!-- Social / External Links -->
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <a *ngIf="a.linkedinUrl" 
-               [href]="a.linkedinUrl" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               title="View on LinkedIn"
-               style="width: 30px; height: 30px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #38bdf8; text-decoration: none;"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.59 1.59 0 0 0-1.6 1.6 1.6 1.6 0 0 0 1.6 1.6 1.6 1.6 0 0 0 1.6-1.6 1.6 1.6 0 0 0-1.6-1.6z"/>
-              </svg>
-            </a>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <!-- Dynamic Links -->
+            <ng-container *ngIf="a.links && a.links.length > 0">
+              <a *ngFor="let link of a.links" 
+                 [href]="link.url" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 [title]="link.title"
+                 style="width: 30px; height: 30px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #cbd5e1; text-decoration: none; transition: all 0.15s;"
+              >
+                <!-- LinkedIn -->
+                <svg *ngIf="getLinkIcon(link.icon) === 'linkedin'" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #38bdf8;">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.59 1.59 0 0 0-1.6 1.6 1.6 1.6 0 0 0 1.6 1.6 1.6 1.6 0 0 0 1.6-1.6 1.6 1.6 0 0 0-1.6-1.6z"/>
+                </svg>
+                <!-- Twitter / X -->
+                <svg *ngIf="getLinkIcon(link.icon) === 'twitter' || getLinkIcon(link.icon) === 'x'" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color: #cbd5e1;">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <!-- GitHub -->
+                <svg *ngIf="getLinkIcon(link.icon) === 'github'" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #e2e8f0;">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <!-- Medium / Dev.to / Globe / Default -->
+                <svg *ngIf="!['linkedin', 'twitter', 'x', 'github'].includes(getLinkIcon(link.icon))" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #a78bfa;">
+                  <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </a>
+            </ng-container>
 
-            <a *ngIf="a.twitterUrl" 
-               [href]="a.twitterUrl" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               title="View on X (Twitter)"
-               style="width: 30px; height: 30px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #cbd5e1; text-decoration: none;"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
+            <!-- Fallback to legacy fields if links array is empty -->
+            <ng-container *ngIf="!a.links || a.links.length === 0">
+              <a *ngIf="a.linkedinUrl" 
+                 [href]="a.linkedinUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 title="View on LinkedIn"
+                 style="width: 30px; height: 30px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #38bdf8; text-decoration: none;"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.59 1.59 0 0 0-1.6 1.6 1.6 1.6 0 0 0 1.6 1.6 1.6 1.6 0 0 0 1.6-1.6 1.6 1.6 0 0 0-1.6-1.6z"/>
+                </svg>
+              </a>
+              <a *ngIf="a.twitterUrl" 
+                 [href]="a.twitterUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 title="View on X (Twitter)"
+                 style="width: 30px; height: 30px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #cbd5e1; text-decoration: none;"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+            </ng-container>
           </div>
 
           <!-- Edit & Delete -->
@@ -405,26 +435,66 @@
           </div>
         </div>
 
-        <!-- Social Links: LinkedIn & Twitter -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">LinkedIn Article / Post URL</label>
-            <input 
-              type="text" 
-              [(ngModel)]="formLinkedinUrl" 
-              placeholder="https://linkedin.com/posts/..."
-              style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;"
-            />
+        <!-- Dynamic External Links Section -->
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 12px; padding: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px;">Article External Links</label>
+              <span style="font-size: 11px; color: #94a3b8;">Attach any link (LinkedIn, X/Twitter, Dev.to, Medium, GitHub, Blog) with custom name and icon.</span>
+            </div>
+            <button 
+              type="button"
+              (click)="addArticleLink()"
+              style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; background: rgba(124, 58, 237, 0.2); border: 1px solid rgba(124, 58, 237, 0.4); color: #c084fc; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s;"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Add Link</span>
+            </button>
           </div>
 
-          <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Twitter / X Thread URL</label>
-            <input 
-              type="text" 
-              [(ngModel)]="formTwitterUrl" 
-              placeholder="https://x.com/.../status/..."
-              style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;"
-            />
+          <!-- Empty Links State -->
+          <div *ngIf="formLinks.length === 0" style="padding: 16px; border: 1px dashed #334155; border-radius: 8px; text-align: center; color: #64748b; font-size: 12px;">
+            No external links attached. Click <strong>+ Add Link</strong> to add references (e.g. LinkedIn, Dev.to, Medium, or X Thread).
+          </div>
+
+          <!-- Links Repeater List -->
+          <div *ngIf="formLinks.length > 0" style="display: flex; flex-direction: column; gap: 10px;">
+            <div *ngFor="let link of formLinks; let i = index" 
+                 style="display: flex; align-items: center; gap: 8px; background: #090d16; border: 1px solid #334155; border-radius: 8px; padding: 10px; flex-wrap: wrap;">
+              <!-- Title -->
+              <input 
+                type="text" 
+                [(ngModel)]="link.title" 
+                placeholder="Link Title (e.g. LinkedIn, Medium)" 
+                style="flex: 1.2; min-width: 140px; padding: 7px 10px; background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12.5px;" 
+              />
+
+              <!-- URL -->
+              <input 
+                type="text" 
+                [(ngModel)]="link.url" 
+                placeholder="https://..." 
+                style="flex: 2; min-width: 180px; padding: 7px 10px; background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12.5px;" 
+              />
+
+              <!-- Icon Selector -->
+              <select 
+                [(ngModel)]="link.icon" 
+                style="width: 140px; padding: 7px 10px; background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; color: #c084fc; font-size: 12px;"
+              >
+                <option *ngFor="let opt of linkIconPresets" [value]="opt.value">{{ opt.label }}</option>
+              </select>
+
+              <!-- Remove button -->
+              <button 
+                type="button" 
+                (click)="removeArticleLink(i)" 
+                title="Remove Link"
+                style="width: 32px; height: 32px; border-radius: 6px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -537,7 +537,10 @@
         <div>
           <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Icon (Material Symbols)</label>
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; color: #60a5fa; flex-shrink: 0;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"
+                 [style.background]="(disciplineForm.accentColor || '#8b5cf6') + '22'"
+                 [style.color]="disciplineForm.accentColor || '#8b5cf6'"
+                 [style.border]="'1px solid ' + (disciplineForm.accentColor || '#8b5cf6') + '55'">
               <!-- Palette Icon -->
               <svg *ngIf="getCleanIcon(disciplineForm.icon) === 'palette'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
@@ -578,6 +581,28 @@
               <option *ngFor="let ic of commonIcons" [value]="ic.value">{{ ic.label }}</option>
             </select>
             <input type="text" [(ngModel)]="disciplineForm.icon" placeholder="or custom icon key" style="width: 140px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <!-- Accent Color & Swatches -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Accent & Icon Color</label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="color" [(ngModel)]="disciplineForm.accentColor" style="width: 44px; height: 38px; border: 1px solid #334155; border-radius: 8px; background: #090d16; cursor: pointer; padding: 2px;" />
+            <input type="text" [(ngModel)]="disciplineForm.accentColor" placeholder="#8b5cf6" style="width: 120px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-family: monospace; font-size: 13px;" />
+            
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <button 
+                *ngFor="let c of presetColors" 
+                type="button"
+                (click)="disciplineForm.accentColor = c.value"
+                [title]="c.label"
+                [style.background]="c.value"
+                [style.transform]="disciplineForm.accentColor === c.value ? 'scale(1.2)' : 'scale(1)'"
+                [style.border]="disciplineForm.accentColor === c.value ? '2px solid #fff' : '2px solid transparent'"
+                style="width: 24px; height: 24px; border-radius: 50%; cursor: pointer; transition: transform 0.15s, border 0.15s; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+              </button>
+            </div>
           </div>
         </div>
 
