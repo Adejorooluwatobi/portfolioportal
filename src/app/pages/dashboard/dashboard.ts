@@ -16,9 +16,12 @@ export class DashboardComponent implements OnInit {
   greeting = 'Welcome back!';
   adminName = 'Oluwatobi Adejoro';
 
-  projectsCount = '25+';
-  experienceTenure = '4+';
-  articlesCount = '2+';
+  projectsCount = '0';
+  projectsLabel = 'Production Web & Cloud APIs';
+  experienceTenure = '0 Years';
+  experienceLabel = 'Fullstack Enterprise Systems';
+  articlesCount = '0';
+  articlesLabel = 'Guides & Architecture Posts';
   inquiryStats: InquiryStats = {
     totalCount: 0,
     unreadCount: 0,
@@ -59,25 +62,44 @@ export class DashboardComponent implements OnInit {
     forkJoin({
       inquiryStats: this.adminService.getInquiryStats().pipe(catchError(() => of({ totalCount: 0, unreadCount: 0, archivedCount: 0, todayCount: 0 }))),
       inquiries: this.adminService.getInquiries().pipe(catchError(() => of([]))),
-      projects: this.adminService.getProjects().pipe(catchError(() => of([]))),
-      articles: this.adminService.getArticles().pipe(catchError(() => of([]))),
-      profile: this.adminService.getProfile().pipe(catchError(() => of(null)))
+      projects: this.adminService.getAdminProjects().pipe(catchError(() => of([]))),
+      articles: this.adminService.getAdminArticles().pipe(catchError(() => of([]))),
+      profile: this.adminService.getAdminProfile().pipe(catchError(() => of(null)))
     }).subscribe({
       next: (res) => {
         this.inquiryStats = res.inquiryStats;
         this.recentInquiries = (res.inquiries || []).slice(0, 5);
 
-        if (res.projects && res.projects.length > 0) {
+        // 1. Featured Projects
+        if (res.profile?.projectsCompletedSuffix) {
+          this.projectsCount = res.profile.projectsCompletedSuffix;
+        } else if (res.profile?.projectsCompleted) {
+          this.projectsCount = `${res.profile.projectsCompleted}+`;
+        } else if (res.projects && res.projects.length > 0) {
           this.projectsCount = `${res.projects.length}+`;
+        } else {
+          this.projectsCount = '0';
+        }
+        if (res.profile?.projectsLabel) {
+          this.projectsLabel = res.profile.projectsLabel;
         }
 
-        if (res.articles && res.articles.length > 0) {
-          this.articlesCount = `${res.articles.length}`;
+        // 2. Experience Tenure
+        if (res.profile?.yearsExperienceSuffix) {
+          this.experienceTenure = res.profile.yearsExperienceSuffix.toLowerCase().includes('year')
+            ? res.profile.yearsExperienceSuffix
+            : `${res.profile.yearsExperienceSuffix} Years`;
+        } else if (res.profile?.yearsExperience) {
+          this.experienceTenure = `${res.profile.yearsExperience}+ Years`;
+        } else {
+          this.experienceTenure = '0 Years';
+        }
+        if (res.profile?.yearsExperienceLabel) {
+          this.experienceLabel = res.profile.yearsExperienceLabel;
         }
 
-        if (res.profile) {
-          this.experienceTenure = res.profile.yearsExperienceSuffix || '4+';
-        }
+        // 3. Technical Articles
+        this.articlesCount = res.articles ? `${res.articles.length}` : '0';
 
         this.isLoading = false;
         this.cdr.detectChanges();

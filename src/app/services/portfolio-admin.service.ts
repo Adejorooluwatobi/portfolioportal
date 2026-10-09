@@ -140,6 +140,22 @@ export interface ArticleTagItem {
   sortOrder?: number;
 }
 
+export interface ArticleLinkItem {
+  id?: string;
+  articleId?: string;
+  title: string;
+  url: string;
+  icon?: string;
+  sortOrder: number;
+}
+
+export interface ArticleLinkCreateDto {
+  title: string;
+  url: string;
+  icon?: string;
+  sortOrder: number;
+}
+
 export interface ArticleItem {
   id: string;
   slug: string;
@@ -158,6 +174,7 @@ export interface ArticleItem {
   isActive: boolean;
   sortOrder: number;
   tags: ArticleTagItem[];
+  links?: ArticleLinkItem[];
   createdAt: string;
   updatedAt?: string;
 }
@@ -179,6 +196,7 @@ export interface ArticleCreateUpdateDto {
   isActive: boolean;
   sortOrder: number;
   tags: string[];
+  links?: ArticleLinkCreateDto[];
 }
 
 export interface ExperienceTechnologyItem {
@@ -370,6 +388,7 @@ export interface DisciplineCardItem {
   title: string;
   description: string;
   sortOrder: number;
+  accentColor?: string;
   tags: DisciplineTagItem[];
 }
 
@@ -379,6 +398,7 @@ export interface DisciplineCardCreateUpdateDto {
   title: string;
   description: string;
   sortOrder: number;
+  accentColor?: string;
   tags: string[];
 }
 
@@ -443,6 +463,14 @@ export class PortfolioAdminService {
 
   getProjectCategories(): Observable<ProjectCategoryItem[]> {
     return this.http.get<ProjectCategoryItem[]>(`${this.apiUrl}/admin/AdminProjects/categories`);
+  }
+
+  createProjectCategory(dto: { slug: string; label: string; sortOrder?: number; isActive?: boolean }): Observable<ProjectCategoryItem> {
+    return this.http.post<ProjectCategoryItem>(`${this.apiUrl}/admin/AdminProjects/categories`, dto);
+  }
+
+  deleteProjectCategory(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/AdminProjects/categories/${id}`);
   }
 
   // Case Study Management

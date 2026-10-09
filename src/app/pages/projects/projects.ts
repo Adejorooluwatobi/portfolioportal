@@ -65,6 +65,11 @@ export class ProjectsComponent implements OnInit {
   formTagsInput = '';
   selectedCategoryIds: string[] = [];
 
+  // Category Management State
+  isAddingCategory = false;
+  newCategoryLabel = '';
+  isSavingCategory = false;
+
   // Case Study Form Model
   csTitle = '';
   csCategoryLabel = '';
@@ -524,6 +529,55 @@ export class ProjectsComponent implements OnInit {
       error: (err) => {
         this.isDeleting = false;
         this.showToast('Failed to delete project: ' + (err.error?.message || err.message), 'error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Category Selection & Management
+  saveNewCategory(): void {
+    const label = this.newCategoryLabel.trim();
+    if (!label) return;
+    const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    this.isSavingCategory = true;
+    this.adminService.createProjectCategory({ label, slug, sortOrder: this.categories.length + 1, isActive: true }).subscribe({
+      next: (created) => {
+        this.isSavingCategory = false;
+        this.newCategoryLabel = '';
+        this.isAddingCategory = false;
+        this.categories.push(created);
+        if (!this.selectedCategoryIds.includes(created.id)) {
+          this.selectedCategoryIds.push(created.id);
+        }
+        this.showToast(`Category "${created.label}" created!`, 'success');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isSavingCategory = false;
+        this.showToast('Failed to create category: ' + (err.error?.message || 'Error occurred'), 'error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  deleteCategory(cat: ProjectCategoryItem, event: Event): void {
+    event.stopPropagation();
+    if (cat.slug === 'all') {
+      this.showToast('The "All" category cannot be removed.', 'error');
+      return;
+    }
+    if (!confirm(`Are you sure you want to delete category "${cat.label}"?`)) {
+      return;
+    }
+    this.adminService.deleteProjectCategory(cat.id).subscribe({
+      next: () => {
+        this.categories = this.categories.filter(c => c.id !== cat.id);
+        this.selectedCategoryIds = this.selectedCategoryIds.filter(id => id !== cat.id);
+        this.showToast(`Category "${cat.label}" deleted.`, 'success');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.showToast('Failed to delete category: ' + (err.error?.message || 'Error occurred'), 'error');
         this.cdr.detectChanges();
       }
     });

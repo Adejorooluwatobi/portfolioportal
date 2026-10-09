@@ -126,6 +126,7 @@ export class ProfileComponent implements OnInit {
     title: '',
     description: '',
     sortOrder: 1,
+    accentColor: '#8b5cf6',
     tags: []
   };
   newDisciplineTag = '';
@@ -133,6 +134,17 @@ export class ProfileComponent implements OnInit {
   disciplineToDelete: DisciplineCardItem | null = null;
   isDeleteDisciplineModalOpen = false;
   isDeletingDiscipline = false;
+
+  presetColors = [
+    { label: 'Purple / Violet', value: '#8b5cf6' },
+    { label: 'Emerald / Green', value: '#10b981' },
+    { label: 'Sky / Cyan Blue', value: '#0ea5e9' },
+    { label: 'Amber / Gold', value: '#f59e0b' },
+    { label: 'Rose / Red', value: '#f43f5e' },
+    { label: 'Fuchsia / Pink', value: '#ec4899' },
+    { label: 'Indigo', value: '#6366f1' },
+    { label: 'Teal', value: '#14b8a6' }
+  ];
 
   commonIcons = [
     { label: 'Palette (Design / UI)', value: 'palette' },
@@ -269,15 +281,14 @@ export class ProfileComponent implements OnInit {
         next: (res) => {
           this.isUploadingCv = false;
           this.profile.cvFileUrl = res.url;
-          if (!this.profile.cvDownloadName) {
-            this.profile.cvDownloadName = file.name;
-          }
-          this.showToast('CV document uploaded!', 'success');
+          this.profile.cvDownloadName = file.name;
+          this.showToast('CV document uploaded to Cloudinary successfully!', 'success');
           this.cdr.detectChanges();
         },
         error: (err) => {
           this.isUploadingCv = false;
-          this.showToast('CV upload failed: ' + (err.error?.message || 'Check connection'), 'error');
+          const msg = err.error?.message || 'Check Cloudinary connection and permissions';
+          this.showToast('CV upload failed: ' + msg, 'error');
           this.cdr.detectChanges();
         }
       });
@@ -441,6 +452,7 @@ export class ProfileComponent implements OnInit {
       title: '',
       description: '',
       sortOrder: this.disciplines.length + 1,
+      accentColor: '#8b5cf6',
       tags: []
     };
     this.newDisciplineTag = '';
@@ -457,6 +469,7 @@ export class ProfileComponent implements OnInit {
       title: card.title || '',
       description: card.description || '',
       sortOrder: card.sortOrder || 1,
+      accentColor: card.accentColor || '#8b5cf6',
       tags: (card.tags || []).map(t => typeof t === 'string' ? t : t.tagName)
     };
     this.newDisciplineTag = '';
@@ -565,6 +578,14 @@ export class ProfileComponent implements OnInit {
   }
 
   getCardTheme(card: DisciplineCardItem, index: number) {
+    if (card.accentColor && card.accentColor.trim()) {
+      const hex = card.accentColor.trim();
+      return {
+        bg: `${hex}1f`,
+        color: hex,
+        border: `${hex}4d`
+      };
+    }
     const themes = [
       { bg: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: 'rgba(59, 130, 246, 0.25)' },
       { bg: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: 'rgba(16, 185, 129, 0.25)' },

@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { 
   PortfolioAdminService, 
   ArticleItem, 
-  ArticleCreateUpdateDto 
+  ArticleCreateUpdateDto,
+  ArticleLinkCreateDto,
+  ArticleLinkItem
 } from '../../services/portfolio-admin.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -59,6 +61,40 @@ export class ArticlesComponent implements OnInit {
   formIsActive = true;
   formSortOrder = 1;
   formTagsInput = '';
+
+  // Dynamic Article Links
+  formLinks: ArticleLinkCreateDto[] = [];
+  linkIconPresets = [
+    { label: 'LinkedIn', value: 'linkedin' },
+    { label: 'X / Twitter', value: 'twitter' },
+    { label: 'Medium', value: 'medium' },
+    { label: 'Dev.to', value: 'devto' },
+    { label: 'GitHub', value: 'github' },
+    { label: 'Website / External', value: 'globe' },
+    { label: 'Hashnode', value: 'hashnode' },
+    { label: 'YouTube', value: 'youtube' },
+    { label: 'Document / PDF', value: 'file' }
+  ];
+
+  addArticleLink(): void {
+    this.formLinks.push({
+      title: '',
+      url: '',
+      icon: 'globe',
+      sortOrder: this.formLinks.length + 1
+    });
+  }
+
+  removeArticleLink(index: number): void {
+    if (index >= 0 && index < this.formLinks.length) {
+      this.formLinks.splice(index, 1);
+    }
+  }
+
+  getLinkIcon(icon: string | undefined): string {
+    if (!icon) return 'globe';
+    return icon.trim().toLowerCase();
+  }
 
   // Delete Modal
   isDeleteModalOpen = false;
@@ -171,6 +207,7 @@ export class ArticlesComponent implements OnInit {
     this.formIsActive = true;
     this.formSortOrder = nextOrder;
     this.formTagsInput = '';
+    this.formLinks = [];
 
     this.isEditorOpen = true;
   }
@@ -195,6 +232,23 @@ export class ArticlesComponent implements OnInit {
     this.formIsActive = article.isActive;
     this.formSortOrder = article.sortOrder;
     this.formTagsInput = article.tags ? article.tags.map(t => t.tagName).join(', ') : '';
+
+    if (article.links && article.links.length > 0) {
+      this.formLinks = article.links.map((l, i) => ({
+        title: l.title,
+        url: l.url,
+        icon: l.icon || 'globe',
+        sortOrder: l.sortOrder || i + 1
+      }));
+    } else {
+      this.formLinks = [];
+      if (article.linkedinUrl) {
+        this.formLinks.push({ title: 'LinkedIn', url: article.linkedinUrl, icon: 'linkedin', sortOrder: 1 });
+      }
+      if (article.twitterUrl) {
+        this.formLinks.push({ title: 'X / Twitter', url: article.twitterUrl, icon: 'twitter', sortOrder: 2 });
+      }
+    }
 
     this.isEditorOpen = true;
   }
@@ -257,6 +311,18 @@ export class ArticlesComponent implements OnInit {
 
     const publishedAtDate = this.formPublishedDate ? new Date(this.formPublishedDate).toISOString() : new Date().toISOString();
 
+    const validLinks: ArticleLinkCreateDto[] = this.formLinks
+      .filter(l => l.title && l.title.trim() && l.url && l.url.trim())
+      .map((l, i) => ({
+        title: l.title.trim(),
+        url: l.url.trim(),
+        icon: l.icon?.trim() || 'globe',
+        sortOrder: i + 1
+      }));
+
+    const firstLinkedin = validLinks.find(l => l.icon === 'linkedin' || l.title.toLowerCase().includes('linkedin'))?.url || this.formLinkedinUrl.trim() || undefined;
+    const firstTwitter = validLinks.find(l => l.icon === 'twitter' || l.title.toLowerCase().includes('twitter') || l.title.toLowerCase() === 'x')?.url || this.formTwitterUrl.trim() || undefined;
+
     const dto: ArticleCreateUpdateDto = {
       title: this.formTitle.trim(),
       slug: this.formSlug.trim().toLowerCase(),
@@ -267,13 +333,14 @@ export class ArticlesComponent implements OnInit {
       readTimeMinutes: Number(this.formReadTimeMinutes) || 5,
       imageUrl: this.formImageUrl.trim() || undefined,
       imageAlt: this.formImageAlt.trim() || this.formTitle.trim(),
-      linkedinUrl: this.formLinkedinUrl.trim() || undefined,
-      twitterUrl: this.formTwitterUrl.trim() || undefined,
+      linkedinUrl: firstLinkedin,
+      twitterUrl: firstTwitter,
       footerAnnotation: this.formFooterAnnotation.trim() || undefined,
       publishedAt: publishedAtDate,
       isActive: this.formIsActive,
       sortOrder: Number(this.formSortOrder) || 1,
-      tags: tagsArray
+      tags: tagsArray,
+      links: validLinks
     };
 
     this.isSaving = true;
@@ -329,7 +396,8 @@ export class ArticlesComponent implements OnInit {
       publishedAt: article.publishedAt,
       isActive: updatedStatus,
       sortOrder: article.sortOrder,
-      tags: article.tags ? article.tags.map(t => t.tagName) : []
+      tags: article.tags ? article.tags.map(t => t.tagName) : [],
+      links: article.links ? article.links.map((l, i) => ({ title: l.title, url: l.url, icon: l.icon || 'globe', sortOrder: l.sortOrder || i + 1 })) : []
     };
 
     this.adminService.updateArticle(article.id, dto).subscribe({
