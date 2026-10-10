@@ -36,12 +36,23 @@ export class ThemeService {
 
   private applyTheme(theme: AppTheme): void {
     document.documentElement.setAttribute('data-theme', theme);
+    if (document.body) {
+      document.body.setAttribute('data-theme', theme);
+    }
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
+      if (document.body) {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      }
     } else {
       document.documentElement.classList.add('light');
       document.documentElement.classList.remove('dark');
+      if (document.body) {
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
+      }
     }
   }
 }
