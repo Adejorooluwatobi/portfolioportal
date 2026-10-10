@@ -8,7 +8,9 @@ import {
   SocialLinkItem, 
   SocialLinkCreateUpdateDto,
   DisciplineCardItem,
-  DisciplineCardCreateUpdateDto
+  DisciplineCardCreateUpdateDto,
+  PhilosophyCardItem,
+  PhilosophyCardCreateUpdateDto
 } from '../../services/portfolio-admin.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -24,7 +26,7 @@ export class ProfileComponent implements OnInit {
   private toast = inject(ToastService);
   private cdr = inject(ChangeDetectorRef);
 
-  activeTab: 'details' | 'hero' | 'socials' | 'disciplines' = 'details';
+  activeTab: 'details' | 'hero' | 'socials' | 'disciplines' | 'philosophies' = 'details';
 
   // Loading & State
   isLoading = false;
@@ -159,6 +161,36 @@ export class ProfileComponent implements OnInit {
     { label: 'Speed (Optimization)', value: 'speed' }
   ];
 
+  // Engineering Philosophy Cards
+  philosophies: PhilosophyCardItem[] = [];
+  isLoadingPhilosophies = false;
+  isPhilosophyModalOpen = false;
+  isEditingPhilosophy = false;
+  selectedPhilosophyId: string | null = null;
+  philosophyForm: PhilosophyCardCreateUpdateDto = {
+    icon: 'speed',
+    title: '',
+    description: '',
+    sortOrder: 1,
+    accentColor: '#8b5cf6'
+  };
+  isSavingPhilosophy = false;
+  philosophyToDelete: PhilosophyCardItem | null = null;
+  isDeletePhilosophyModalOpen = false;
+  isDeletingPhilosophy = false;
+
+  philosophyPresetIcons = [
+    { label: 'Speed (Performance First)', value: 'speed' },
+    { label: 'Security (Enterprise Grade)', value: 'security' },
+    { label: 'Devices (Fluid UI / UX)', value: 'devices' },
+    { label: 'Code (Clean Architecture)', value: 'code' },
+    { label: 'Rocket (Scalability)', value: 'rocket_launch' },
+    { label: 'Database (Data Integrity)', value: 'database' },
+    { label: 'Shield (Privacy & Security)', value: 'shield' },
+    { label: 'Bolt (High Throughput)', value: 'bolt' },
+    { label: 'Verified (Standards)', value: 'verified' }
+  ];
+
   ngOnInit(): void {
     this.loadData();
   }
@@ -189,6 +221,7 @@ export class ProfileComponent implements OnInit {
 
     this.loadSocials();
     this.loadDisciplines();
+    this.loadPhilosophies();
   }
 
   getImageUrl(url: string | undefined): string {
@@ -572,6 +605,137 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // Philosophy Management Methods
+  loadPhilosophies(): void {
+    this.isLoadingPhilosophies = true;
+    this.adminService.getAdminPhilosophies().subscribe({
+      next: (items) => {
+        this.philosophies = items || [];
+        this.isLoadingPhilosophies = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoadingPhilosophies = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openCreatePhilosophy(): void {
+    this.isEditingPhilosophy = false;
+    this.selectedPhilosophyId = null;
+    this.philosophyForm = {
+      icon: 'speed',
+      title: '',
+      description: '',
+      sortOrder: this.philosophies.length + 1,
+      accentColor: '#8b5cf6'
+    };
+    this.isPhilosophyModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  openEditPhilosophy(card: PhilosophyCardItem, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isEditingPhilosophy = true;
+    this.selectedPhilosophyId = card.id;
+    this.philosophyForm = {
+      icon: card.icon || 'speed',
+      title: card.title,
+      description: card.description,
+      sortOrder: card.sortOrder,
+      accentColor: card.accentColor || '#8b5cf6'
+    };
+    this.isPhilosophyModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closePhilosophyModal(): void {
+    this.isPhilosophyModalOpen = false;
+    this.cdr.detectChanges();
+  }
+
+  savePhilosophy(): void {
+    if (!this.philosophyForm.title.trim()) {
+      this.showToast('Card title is required.', 'error');
+      return;
+    }
+    if (!this.philosophyForm.description.trim()) {
+      this.showToast('Description is required.', 'error');
+      return;
+    }
+
+    this.isSavingPhilosophy = true;
+    this.cdr.detectChanges();
+
+    if (this.isEditingPhilosophy && this.selectedPhilosophyId) {
+      this.adminService.updateAdminPhilosophy(this.selectedPhilosophyId, this.philosophyForm).subscribe({
+        next: () => {
+          this.isSavingPhilosophy = false;
+          this.isPhilosophyModalOpen = false;
+          this.showToast('Philosophy card updated successfully!', 'success');
+          this.loadPhilosophies();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.isSavingPhilosophy = false;
+          this.showToast('Failed to update card: ' + (err.error?.message || err.message), 'error');
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.adminService.createAdminPhilosophy(this.philosophyForm).subscribe({
+        next: () => {
+          this.isSavingPhilosophy = false;
+          this.isPhilosophyModalOpen = false;
+          this.showToast('Philosophy card created successfully!', 'success');
+          this.loadPhilosophies();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.isSavingPhilosophy = false;
+          this.showToast('Failed to create card: ' + (err.error?.message || err.message), 'error');
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
+  openDeletePhilosophy(card: PhilosophyCardItem, event: Event): void {
+    event.stopPropagation();
+    this.philosophyToDelete = card;
+    this.isDeletePhilosophyModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closeDeletePhilosophyModal(): void {
+    this.isDeletePhilosophyModalOpen = false;
+    this.philosophyToDelete = null;
+    this.cdr.detectChanges();
+  }
+
+  executeDeletePhilosophy(): void {
+    if (!this.philosophyToDelete) return;
+    this.isDeletingPhilosophy = true;
+    this.cdr.detectChanges();
+
+    this.adminService.deleteAdminPhilosophy(this.philosophyToDelete.id).subscribe({
+      next: () => {
+        this.isDeletingPhilosophy = false;
+        this.isDeletePhilosophyModalOpen = false;
+        this.showToast(`Deleted "${this.philosophyToDelete?.title}"`, 'success');
+        this.philosophyToDelete = null;
+        this.loadPhilosophies();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isDeletingPhilosophy = false;
+        this.showToast('Failed to delete card: ' + (err.error?.message || err.message), 'error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   getCleanIcon(icon: string | undefined): string {
     if (!icon) return 'palette';
     return icon.trim().toLowerCase();
@@ -591,6 +755,23 @@ export class ProfileComponent implements OnInit {
       { bg: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: 'rgba(16, 185, 129, 0.25)' },
       { bg: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: 'rgba(168, 85, 247, 0.25)' },
       { bg: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', border: 'rgba(245, 158, 11, 0.25)' }
+    ];
+    return themes[index % themes.length];
+  }
+
+  getPhilosophyTheme(card: PhilosophyCardItem, index: number) {
+    if (card.accentColor && card.accentColor.trim()) {
+      const hex = card.accentColor.trim();
+      return {
+        bg: `${hex}1f`,
+        color: hex,
+        border: `${hex}4d`
+      };
+    }
+    const themes = [
+      { bg: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6', border: 'rgba(139, 92, 246, 0.25)' },
+      { bg: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: 'rgba(16, 185, 129, 0.25)' },
+      { bg: 'rgba(14, 165, 233, 0.15)', color: '#0ea5e9', border: 'rgba(14, 165, 233, 0.25)' }
     ];
     return themes[index % themes.length];
   }

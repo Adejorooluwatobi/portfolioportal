@@ -402,6 +402,23 @@ export interface DisciplineCardCreateUpdateDto {
   tags: string[];
 }
 
+export interface PhilosophyCardItem {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  accentColor?: string;
+}
+
+export interface PhilosophyCardCreateUpdateDto {
+  icon: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  accentColor?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -614,6 +631,23 @@ export class PortfolioAdminService {
 
   deleteAdminDiscipline(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin/AdminProfile/disciplines/${id}`);
+  }
+
+  // --- Engineering Philosophy Cards ---
+  getAdminPhilosophies(): Observable<PhilosophyCardItem[]> {
+    return this.http.get<PhilosophyCardItem[]>(`${this.apiUrl}/admin/AdminProfile/philosophies`);
+  }
+
+  createAdminPhilosophy(dto: PhilosophyCardCreateUpdateDto): Observable<PhilosophyCardItem> {
+    return this.http.post<PhilosophyCardItem>(`${this.apiUrl}/admin/AdminProfile/philosophies`, dto);
+  }
+
+  updateAdminPhilosophy(id: string, dto: PhilosophyCardCreateUpdateDto): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/AdminProfile/philosophies/${id}`, dto);
+  }
+
+  deleteAdminPhilosophy(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin/AdminProfile/philosophies/${id}`);
   }
 
   // Document Upload (CV, etc.)
