@@ -61,6 +61,8 @@ export class ArticlesComponent implements OnInit {
   formIsActive = true;
   formSortOrder = 1;
   formTagsInput = '';
+  isCustomPublicationType = false;
+  formCustomPublicationType = '';
 
   // Dynamic Article Links
   formLinks: ArticleLinkCreateDto[] = [];
@@ -108,6 +110,26 @@ export class ArticlesComponent implements OnInit {
     'LinkedIn Technical Post',
     'Engineering Note'
   ];
+
+  onPublicationTypeChange(): void {
+    if (this.formPublicationType === '__custom__') {
+      this.isCustomPublicationType = true;
+      if (!this.formCustomPublicationType) {
+        this.formCustomPublicationType = '';
+      }
+    } else {
+      this.isCustomPublicationType = false;
+    }
+  }
+
+  toggleCustomPublicationType(): void {
+    this.isCustomPublicationType = !this.isCustomPublicationType;
+    if (this.isCustomPublicationType) {
+      this.formPublicationType = '__custom__';
+    } else {
+      this.formPublicationType = this.publicationTypes.length > 0 ? this.publicationTypes[0] : 'Software Development Guide';
+    }
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -196,6 +218,8 @@ export class ArticlesComponent implements OnInit {
     this.formExcerpt = '';
     this.formCategory = this.categories.length > 0 ? this.categories[0] : 'Backend & Architecture';
     this.formPublicationType = 'Software Development Guide';
+    this.isCustomPublicationType = false;
+    this.formCustomPublicationType = '';
     this.formPublishStatus = 'Published';
     this.formReadTimeMinutes = 5;
     this.formImageUrl = '';
@@ -220,7 +244,18 @@ export class ArticlesComponent implements OnInit {
     this.formSlug = article.slug || '';
     this.formExcerpt = article.excerpt || '';
     this.formCategory = article.category || '';
-    this.formPublicationType = article.publicationType || 'Software Development Guide';
+
+    const currentType = article.publicationType || 'Software Development Guide';
+    if (this.publicationTypes.includes(currentType)) {
+      this.formPublicationType = currentType;
+      this.isCustomPublicationType = false;
+      this.formCustomPublicationType = '';
+    } else {
+      this.formPublicationType = '__custom__';
+      this.isCustomPublicationType = true;
+      this.formCustomPublicationType = currentType;
+    }
+
     this.formPublishStatus = article.publishStatus || 'Published';
     this.formReadTimeMinutes = article.readTimeMinutes || 5;
     this.formImageUrl = article.imageUrl || '';
@@ -323,12 +358,20 @@ export class ArticlesComponent implements OnInit {
     const firstLinkedin = validLinks.find(l => l.icon === 'linkedin' || l.title.toLowerCase().includes('linkedin'))?.url || this.formLinkedinUrl.trim() || undefined;
     const firstTwitter = validLinks.find(l => l.icon === 'twitter' || l.title.toLowerCase().includes('twitter') || l.title.toLowerCase() === 'x')?.url || this.formTwitterUrl.trim() || undefined;
 
+    const resolvedPubType = this.isCustomPublicationType
+      ? (this.formCustomPublicationType.trim() || 'Software Development Guide')
+      : (this.formPublicationType.trim() || 'Software Development Guide');
+
+    if (resolvedPubType && !this.publicationTypes.includes(resolvedPubType)) {
+      this.publicationTypes.push(resolvedPubType);
+    }
+
     const dto: ArticleCreateUpdateDto = {
       title: this.formTitle.trim(),
       slug: this.formSlug.trim().toLowerCase(),
       excerpt: this.formExcerpt.trim(),
       category: this.formCategory.trim(),
-      publicationType: this.formPublicationType.trim(),
+      publicationType: resolvedPubType,
       publishStatus: this.formPublishStatus.trim(),
       readTimeMinutes: Number(this.formReadTimeMinutes) || 5,
       imageUrl: this.formImageUrl.trim() || undefined,

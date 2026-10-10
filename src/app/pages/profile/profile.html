@@ -16,7 +16,7 @@
       <button 
         (click)="loadData()" 
         title="Sync live data"
-        style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 10px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;"
+        class="btn-secondary"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
@@ -67,6 +67,16 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       <span>4. What I Do ({{ disciplines.length }})</span>
     </button>
+
+    <button 
+      (click)="activeTab = 'philosophies'"
+      [style.background]="activeTab === 'philosophies' ? '#2563eb' : 'transparent'"
+      [style.color]="activeTab === 'philosophies' ? '#fff' : '#94a3b8'"
+      style="flex: 1; padding: 10px 16px; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      <span>5. Engineering Philosophy ({{ philosophies.length }})</span>
+    </button>
   </div>
 
   <!-- Loading State -->
@@ -104,8 +114,8 @@
               placeholder="assets/img/... or https://..."
               style="flex: 1; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;"
             />
-            <label style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; background: rgba(30, 41, 59, 0.9); border: 1px solid #334155; border-radius: 8px; color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <label class="btn-secondary" style="padding: 7px 14px; font-size: 12px; cursor: pointer;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15"/></svg>
               <span>{{ isUploadingAvatar ? 'Uploading...' : 'Upload Photo' }}</span>
               <input type="file" accept="image/*" (change)="onAvatarSelected($event)" style="display: none;" [disabled]="isUploadingAvatar" />
             </label>
@@ -484,7 +494,7 @@
 
           <!-- Row 4: Tag Pills (Matching frontend pill styling) -->
           <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px;">
-            <span *ngFor="let t of card.tags" style="font-size: 12px; padding: 4px 12px; border-radius: 9999px; background: rgba(30, 41, 59, 0.7); border: 1px solid #334155; color: #cbd5e1; font-weight: 500;">
+            <span *ngFor="let t of card.tags" class="tag-pill">
               {{ t.tagName || t }}
             </span>
           </div>
@@ -497,6 +507,82 @@
             Edit
           </button>
           <button (click)="openDeleteDiscipline(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 5: ARCHITECTURE & ENGINEERING PHILOSOPHY ================= -->
+  <div *ngIf="!isLoading && activeTab === 'philosophies'" style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- Top Action Bar -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 18px 24px;">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Architecture & Code Philosophy Cards</h3>
+        <p style="font-size: 12px; color: #94a3b8;">Manage the 3 foundational engineering pillars displayed beneath your bio narrative on the homepage.</p>
+      </div>
+      <button 
+        (click)="openCreatePhilosophy()"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background 0.15s;"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add Philosophy Card</span>
+      </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoadingPhilosophies" style="display: flex; justify-content: center; padding: 50px 0;">
+      <div style="width: 36px; height: 36px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoadingPhilosophies && philosophies.length === 0" style="text-align: center; padding: 50px 20px; background: rgba(15, 23, 42, 0.5); border: 1px dashed #334155; border-radius: 16px;">
+      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;">No philosophy cards defined yet.</p>
+      <button (click)="openCreatePhilosophy()" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
+        + Create First Card
+      </button>
+    </div>
+
+    <!-- Cards Grid -->
+    <div *ngIf="!isLoadingPhilosophies && philosophies.length > 0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+      <div *ngFor="let card of philosophies; let idx = index"
+           [style.borderColor]="card.accentColor ? (card.accentColor + '55') : '#1e293b'"
+           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 25px rgba(0,0,0,0.3); position: relative; transition: all 0.2s;">
+        
+        <div>
+          <!-- Header: Icon & Sort Order -->
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;">
+            <div [style.background]="getPhilosophyTheme(card, idx).bg"
+                 [style.color]="getPhilosophyTheme(card, idx).color"
+                 [style.border]="'1px solid ' + getPhilosophyTheme(card, idx).border"
+                 style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <span class="material-symbols-outlined" style="font-size: 24px;">{{ card.icon || 'speed' }}</span>
+            </div>
+            <span style="font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; padding: 2px 8px; border-radius: 6px;">
+              Order: {{ card.sortOrder }}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h4 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px;">
+            {{ card.title }}
+          </h4>
+
+          <!-- Description -->
+          <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px;">
+            {{ card.description }}
+          </p>
+        </div>
+
+        <!-- Footer Actions -->
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid #1e293b; padding-top: 14px;">
+          <button (click)="openEditPhilosophy(card, $event)" title="Edit" style="padding: 7px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; cursor: pointer; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Edit
+          </button>
+          <button (click)="openDeletePhilosophy(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>
@@ -623,13 +709,13 @@
           </div>
 
           <!-- Tags List -->
-          <div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px; min-height: 42px; align-items: center;">
+          <div class="modal-chip-box">
             <span *ngIf="disciplineForm.tags.length === 0" style="color: #64748b; font-size: 12px; font-style: italic;">
               No tags added yet. Type a technology name above and press Add or Enter.
             </span>
-            <span *ngFor="let t of disciplineForm.tags; let i = index" style="display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; padding: 3px 10px; border-radius: 20px; background: rgba(30, 41, 59, 0.9); border: 1px solid #334155; color: #cbd5e1;">
+            <span *ngFor="let t of disciplineForm.tags; let i = index" class="modal-chip">
               {{ t }}
-              <button type="button" (click)="removeDisciplineTag(i)" title="Remove" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0; font-size: 13px; line-height: 1; display: flex; align-items: center;">
+              <button type="button" (click)="removeDisciplineTag(i)" title="Remove" class="chip-remove">
                 &times;
               </button>
             </span>
@@ -638,7 +724,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #1e293b; padding-top: 16px;">
-        <button (click)="closeDisciplineModal()" style="padding: 9px 18px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="closeDisciplineModal()" class="btn-secondary">Cancel</button>
         <button (click)="saveDiscipline()" [disabled]="isSavingDiscipline" style="padding: 9px 22px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
           {{ isSavingDiscipline ? 'Saving...' : 'Save Competency' }}
         </button>
@@ -655,7 +741,7 @@
         Are you sure you want to remove <strong style="color: #fff;">{{ disciplineToDelete?.title }}</strong>? This action cannot be undone.
       </p>
       <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button (click)="closeDeleteDisciplineModal()" style="padding: 8px 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="closeDeleteDisciplineModal()" class="btn-secondary">Cancel</button>
         <button (click)="executeDeleteDiscipline()" [disabled]="isDeletingDiscipline" style="padding: 8px 18px; border-radius: 8px; background: #dc2626; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
           {{ isDeletingDiscipline ? 'Deleting...' : 'Delete' }}
         </button>
@@ -704,7 +790,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button (click)="closeSocialModal()" style="padding: 8px 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 12.5px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="closeSocialModal()" class="btn-secondary">Cancel</button>
         <button (click)="saveSocial()" style="padding: 8px 20px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;">Save Channel</button>
       </div>
     </div>
@@ -719,8 +805,101 @@
         Are you sure you want to remove <strong style="color: #fff;">{{ socialToDelete?.title }}</strong>?
       </p>
       <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button (click)="closeDeleteModal()" style="padding: 8px 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button (click)="closeDeleteModal()" class="btn-secondary">Cancel</button>
         <button (click)="executeDeleteSocial()" [disabled]="isDeletingSocial" style="padding: 8px 18px; border-radius: 8px; background: #dc2626; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PHILOSOPHY ADD / EDIT MODAL ================= -->
+  <div *ngIf="isPhilosophyModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); z-index: 105; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="width: 100%; max-width: 520px; background: #0b1120; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); animation: scaleUp 0.15s ease-out;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px;">
+        {{ isEditingPhilosophy ? 'Edit Philosophy Card' : 'Add Philosophy Card' }}
+      </h3>
+      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 20px;">Configure the engineering title, icon, description, and display order.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+        <!-- Title -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Title *</label>
+          <input type="text" [(ngModel)]="philosophyForm.title" placeholder="e.g. Performance First, Enterprise Grade, Fluid UI / UX..." style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+
+        <!-- Icon Picker & Live Preview -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Icon *</label>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <div [style.background]="(philosophyForm.accentColor || '#8b5cf6') + '22'"
+                 [style.color]="philosophyForm.accentColor || '#8b5cf6'"
+                 [style.border]="'1px solid ' + (philosophyForm.accentColor || '#8b5cf6') + '55'"
+                 style="width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span class="material-symbols-outlined" style="font-size: 24px;">{{ philosophyForm.icon || 'speed' }}</span>
+            </div>
+            <select [(ngModel)]="philosophyForm.icon" style="flex: 1; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;">
+              <option *ngFor="let ic of philosophyPresetIcons" [value]="ic.value">{{ ic.label }}</option>
+            </select>
+            <input type="text" [(ngModel)]="philosophyForm.icon" placeholder="or custom key" style="width: 130px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          </div>
+        </div>
+
+        <!-- Accent Color & Swatches -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Accent & Icon Color</label>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="color" [(ngModel)]="philosophyForm.accentColor" style="width: 44px; height: 38px; border: 1px solid #334155; border-radius: 8px; background: #090d16; cursor: pointer; padding: 2px;" />
+            <input type="text" [(ngModel)]="philosophyForm.accentColor" placeholder="#8b5cf6" style="width: 120px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-family: monospace; font-size: 13px;" />
+            
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <button 
+                *ngFor="let c of presetColors" 
+                type="button"
+                (click)="philosophyForm.accentColor = c.value"
+                [title]="c.label"
+                [style.background]="c.value"
+                [style.transform]="philosophyForm.accentColor === c.value ? 'scale(1.2)' : 'scale(1)'"
+                [style.border]="philosophyForm.accentColor === c.value ? '2px solid #fff' : '2px solid transparent'"
+                style="width: 24px; height: 24px; border-radius: 50%; cursor: pointer; transition: transform 0.15s, border 0.15s; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Description *</label>
+          <textarea [(ngModel)]="philosophyForm.description" rows="3" placeholder="e.g. Sub-second latencies, tree-shaken bundles, optimized SQL queries & Redis caching." style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; line-height: 1.5; resize: vertical;"></textarea>
+        </div>
+
+        <!-- Sort Order -->
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Sort Order</label>
+          <input type="number" [(ngModel)]="philosophyForm.sortOrder" style="width: 100px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button (click)="closePhilosophyModal()" class="btn-secondary">Cancel</button>
+        <button (click)="savePhilosophy()" [disabled]="isSavingPhilosophy" style="padding: 9px 22px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+          <span *ngIf="isSavingPhilosophy" style="width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;"></span>
+          <span>{{ isEditingPhilosophy ? 'Update Card' : 'Create Card' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DELETE PHILOSOPHY MODAL ================= -->
+  <div *ngIf="isDeletePhilosophyModalOpen" 
+       style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); z-index: 120; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="width: 100%; max-width: 440px; background: #0b1120; border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); animation: scaleUp 0.15s ease-out;">
+      <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px;">Delete Philosophy Card</h3>
+      <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">
+        Are you sure you want to remove <strong style="color: #fff;">{{ philosophyToDelete?.title }}</strong>? This will remove it from your homepage philosophy badges.
+      </p>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button (click)="closeDeletePhilosophyModal()" class="btn-secondary">Cancel</button>
+        <button (click)="executeDeletePhilosophy()" [disabled]="isDeletingPhilosophy" style="padding: 8px 18px; border-radius: 8px; background: #dc2626; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">Delete</button>
       </div>
     </div>
   </div>
