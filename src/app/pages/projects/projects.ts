@@ -32,6 +32,14 @@ export class ProjectsComponent implements OnInit {
   selectedCategorySlug = 'all';
   filterStatus = 'all'; // 'all', 'published', 'draft'
 
+  // View mode: 'grid' or 'list'
+  viewMode: 'grid' | 'list' = (localStorage.getItem('admin_projects_view_mode') as 'grid' | 'list') || 'grid';
+
+  setViewMode(mode: 'grid' | 'list'): void {
+    this.viewMode = mode;
+    localStorage.setItem('admin_projects_view_mode', mode);
+  }
+
   // Loading & Action states
   isLoading = false;
   isSaving = false;
@@ -163,12 +171,7 @@ export class ProjectsComponent implements OnInit {
     this.currentProjectId = null;
     this.activeTab = 'details';
 
-    // Calculate next sort order
-    const nextOrder = this.projects.length > 0 
-      ? Math.max(...this.projects.map(p => p.sortOrder || 0)) + 1 
-      : 1;
-
-    // Reset project form
+    // Reset project form (Default to top position #1; auto-shifts existing projects down)
     this.formTitle = '';
     this.formSlug = '';
     this.formClientName = '';
@@ -183,7 +186,7 @@ export class ProjectsComponent implements OnInit {
     this.formArticleUrl = '';
     this.formHasCaseStudy = false;
     this.formIsPublished = true;
-    this.formSortOrder = nextOrder;
+    this.formSortOrder = 1;
     this.formTagsInput = '';
     this.selectedCategoryIds = [];
 

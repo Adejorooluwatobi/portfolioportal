@@ -31,6 +31,14 @@ export class ArticlesComponent implements OnInit {
   selectedCategory = 'all';
   filterStatus = 'all'; // 'all', 'published', 'draft'
 
+  // View mode: 'grid' or 'list'
+  viewMode: 'grid' | 'list' = (localStorage.getItem('admin_articles_view_mode') as 'grid' | 'list') || 'grid';
+
+  setViewMode(mode: 'grid' | 'list'): void {
+    this.viewMode = mode;
+    localStorage.setItem('admin_articles_view_mode', mode);
+  }
+
   // Loading & Action states
   isLoading = false;
   isSaving = false;
@@ -207,10 +215,6 @@ export class ArticlesComponent implements OnInit {
     this.isEditing = false;
     this.currentArticleId = null;
 
-    const nextOrder = this.articles.length > 0 
-      ? Math.max(...this.articles.map(a => a.sortOrder || 0)) + 1 
-      : 1;
-
     const todayStr = new Date().toISOString().split('T')[0];
 
     this.formTitle = '';
@@ -229,7 +233,7 @@ export class ArticlesComponent implements OnInit {
     this.formFooterAnnotation = '';
     this.formPublishedDate = todayStr;
     this.formIsActive = true;
-    this.formSortOrder = nextOrder;
+    this.formSortOrder = 1;
     this.formTagsInput = '';
     this.formLinks = [];
 

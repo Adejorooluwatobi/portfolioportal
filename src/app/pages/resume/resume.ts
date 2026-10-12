@@ -176,10 +176,6 @@ export class ResumeComponent implements OnInit {
     this.isEditingExp = false;
     this.currentExpId = null;
 
-    const nextOrder = this.experiences.length > 0 
-      ? Math.max(...this.experiences.map(e => e.sortOrder || 0)) + 1 
-      : 1;
-
     this.expJobTitle = '';
     this.expCompanyName = '';
     this.expEmploymentType = 'Full-Time';
@@ -187,7 +183,7 @@ export class ResumeComponent implements OnInit {
     this.expIsCurrent = true;
     this.expDescription = '';
     this.expAccentVariant = 'primary';
-    this.expSortOrder = nextOrder;
+    this.expSortOrder = 1;
     this.expTechsInput = '';
 
     this.isExpModalOpen = true;
