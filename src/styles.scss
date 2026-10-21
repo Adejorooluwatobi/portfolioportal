@@ -7,64 +7,64 @@
 
 /* ── 1. THEME TOKENS ── */
 :root, [data-theme="dark"], html.dark, body.dark {
-  --bg: #090d16;
-  --surface: #0f172a;
-  --surface2: #1e293b;
-  --surface3: #334155;
-  --border: #1e293b;
-  --border-light: rgba(51, 65, 85, 0.6);
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --accent2: #8b5cf6;
-  --accent3: #06b6d4;
+  --bg: #08080a;
+  --surface: #121216;
+  --surface2: #1c1c22;
+  --surface3: #282830;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.14);
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent2: #38bdf8;
+  --accent3: #60a5fa;
   --gold: #f59e0b;
-  --text: #f8fafc;
-  --text2: #cbd5e1;
-  --muted: #94a3b8;
+  --text: #ffffff;
+  --text2: #a1a1aa;
+  --muted: #71717a;
   --danger: #ef4444;
   --success: #10b981;
   --warn: #f59e0b;
-  --sidebar-bg: #0b1120;
-  --sidebar-border: #1e293b;
-  --sidebar-text: #94a3b8;
-  --header-bg: rgba(15, 23, 42, 0.9);
-  --card-bg: #0f172a;
-  --card-border: #1e293b;
-  --input-bg: #090d16;
-  --input-border: #1e293b;
-  --input-text: #f8fafc;
-  --drawer-bg: #0b1120;
+  --sidebar-bg: #0e0e11;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-text: #a1a1aa;
+  --header-bg: rgba(8, 8, 10, 0.85);
+  --card-bg: rgba(18, 18, 22, 0.85);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --input-bg: #0e0e11;
+  --input-border: rgba(255, 255, 255, 0.12);
+  --input-text: #ffffff;
+  --drawer-bg: #0e0e11;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
 [data-theme="light"], html.light, body.light {
-  --bg: #f1f5f9;
+  --bg: #fafafa;
   --surface: #ffffff;
-  --surface2: #f8fafc;
-  --surface3: #e2e8f0;
-  --border: #e2e8f0;
-  --border-light: rgba(203, 213, 225, 0.8);
+  --surface2: #f4f4f5;
+  --surface3: #e4e4e7;
+  --border: rgba(9, 9, 11, 0.08);
+  --border-light: rgba(9, 9, 11, 0.15);
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
-  --accent2: #7c3aed;
-  --accent3: #0891b2;
+  --accent2: #0284c7;
+  --accent3: #38bdf8;
   --gold: #d97706;
-  --text: #0f172a;
-  --text2: #334155;
-  --muted: #64748b;
+  --text: #09090b;
+  --text2: #52525b;
+  --muted: #71717a;
   --danger: #dc2626;
   --success: #059669;
   --warn: #d97706;
   --sidebar-bg: #ffffff;
-  --sidebar-border: #e2e8f0;
-  --sidebar-text: #64748b;
-  --header-bg: rgba(255, 255, 255, 0.95);
+  --sidebar-border: rgba(9, 9, 11, 0.08);
+  --sidebar-text: #52525b;
+  --header-bg: rgba(255, 255, 255, 0.90);
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --input-bg: #f8fafc;
-  --input-border: #cbd5e1;
-  --input-text: #0f172a;
+  --card-border: rgba(9, 9, 11, 0.08);
+  --input-bg: #ffffff;
+  --input-border: rgba(9, 9, 11, 0.15);
+  --input-text: #09090b;
   --drawer-bg: #ffffff;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -134,6 +134,16 @@ svg {
   min-width: 22px;
   min-height: 22px;
   flex-shrink: 0;
+}
+
+/* Custom Formatting: Almost Invisible Ghost Text */
+.almost-invisible {
+  opacity: 0.20;
+  transition: opacity 0.25s ease;
+  cursor: default;
+}
+.almost-invisible:hover {
+  opacity: 0.90;
 }
 
 /* ── 3. CORE APP SHELL (NO OVERFLOW) ── */
@@ -584,9 +594,9 @@ svg {
   font-weight: 500;
   padding: 4px 12px;
   border-radius: 9999px;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid #334155;
-  color: #cbd5e1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
   transition: all 0.15s ease;
   line-height: 1.4;
 }
@@ -596,8 +606,8 @@ svg {
   flex-wrap: wrap;
   gap: 6px;
   padding: 10px;
-  background: #090d16;
-  border: 1px solid #1e293b;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   min-height: 42px;
   align-items: center;
@@ -611,9 +621,9 @@ svg {
   font-weight: 500;
   padding: 3px 10px;
   border-radius: 20px;
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid #334155;
-  color: #cbd5e1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
   transition: all 0.15s ease;
 
   .chip-remove {
