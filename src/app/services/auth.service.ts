@@ -71,6 +71,10 @@ export class AuthService {
     this.currentUserSubject.next(null);
   }
 
+  public get currentUserValue(): LoginResponse | null {
+    return this.currentUserSubject.value;
+  }
+
   isLoggedIn(): boolean {
     const user = this.currentUserSubject.value;
     return !!user && this.isTokenValid(user);

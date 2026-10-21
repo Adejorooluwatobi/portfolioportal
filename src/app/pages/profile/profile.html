@@ -86,12 +86,12 @@
 
   <!-- ================= TAB 1: PERSONAL & CONTACT DETAILS ================= -->
   <div *ngIf="!isLoading && activeTab === 'details'" style="display: flex; flex-direction: column; gap: 20px;">
-    <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow);">
       
       <!-- Avatar & Photo Header -->
-      <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #1e293b; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap;">
         <!-- Avatar Preview -->
-        <div style="width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid #3b82f6; background: #0b1120; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid var(--accent); background: var(--surface2); display: flex; align-items: center; justify-content: center;">
           <img 
             *ngIf="profile.avatarImageUrl" 
             [src]="getImageUrl(profile.avatarImageUrl)" 
@@ -99,20 +99,20 @@
             style="width: 100%; height: 100%; object-fit: cover;"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
-          <div [style.display]="profile.avatarImageUrl ? 'none' : 'flex'" style="font-size: 26px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #2563eb, #6366f1); width: 100%; height: 100%; align-items: center; justify-content: center;">
+          <div [style.display]="profile.avatarImageUrl ? 'none' : 'flex'" style="font-size: 26px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #2563eb, #1d4ed8); width: 100%; height: 100%; align-items: center; justify-content: center;">
             {{ profile.fullName ? profile.fullName[0] : 'O' }}
           </div>
         </div>
 
         <!-- Avatar URL & Upload -->
         <div style="flex: 1; min-width: 240px;">
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Avatar Image</label>
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px;">Avatar Image</label>
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <input 
               type="text" 
               [(ngModel)]="profile.avatarImageUrl" 
               placeholder="assets/img/... or https://..."
-              style="flex: 1; min-width: 160px; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;"
+              style="flex: 1; min-width: 160px; padding: 9px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px;"
             />
             <label class="btn-secondary" style="flex-shrink: 0; padding: 7px 14px; font-size: 12px; cursor: pointer;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="15"/></svg>
@@ -126,18 +126,18 @@
       <!-- Identity & Titles -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px; margin-bottom: 20px;">
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Full Name <span style="color: #f87171;">*</span></label>
-          <input type="text" [(ngModel)]="profile.fullName" placeholder="e.g. Oluwatobi Adejoro" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px;">Full Name <span style="color: var(--danger);">*</span></label>
+          <input type="text" [(ngModel)]="profile.fullName" placeholder="e.g. Oluwatobi Adejoro" style="width: 100%; padding: 9px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px;" />
         </div>
 
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Primary Title</label>
-          <input type="text" [(ngModel)]="profile.primaryTitle" placeholder="e.g. Senior Fullstack Engineer" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px;">Primary Title</label>
+          <input type="text" [(ngModel)]="profile.primaryTitle" placeholder="e.g. Senior Fullstack Engineer" style="width: 100%; padding: 9px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px;" />
         </div>
 
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Sidebar Title</label>
-          <input type="text" [(ngModel)]="profile.sidebarTitle" placeholder="e.g. Software Engineer" style="width: 100%; padding: 9px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px;" />
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px;">Sidebar Title</label>
+          <input type="text" [(ngModel)]="profile.sidebarTitle" placeholder="e.g. Software Engineer" style="width: 100%; padding: 9px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px;" />
         </div>
       </div>
 
@@ -247,69 +247,105 @@
 
   <!-- ================= TAB 2: HERO SECTION & BIO NARRATIVE ================= -->
   <div *ngIf="!isLoading && activeTab === 'hero'" style="display: flex; flex-direction: column; gap: 20px;">
-    <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow);">
       
       <!-- Headline & Badge -->
       <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 20px;">
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Hero Headline <span style="color: #f87171;">*</span></label>
-          <input type="text" [(ngModel)]="hero.headline" placeholder="e.g. Architecting Scalable, User-Centric Digital Experiences" style="width: 100%; padding: 10px 14px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600;" />
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2);">Hero Headline <span style="color: var(--danger);">*</span></label>
+            <div style="display: flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px;">
+              <span style="padding: 1px 5px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--text);" title="Bold">**bold**</span>
+              <span style="padding: 1px 5px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--text);" title="Italic">\italic\</span>
+              <span style="padding: 1px 5px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); opacity: 0.6;" title="Almost Invisible">~~ghost~~</span>
+            </div>
+          </div>
+          <input type="text" [(ngModel)]="hero.headline" placeholder="e.g. Architecting Scalable, User-Centric Digital Experiences" style="width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 14px; font-weight: 600;" />
+          <div *ngIf="hero.headline" style="margin-top: 6px; padding: 6px 12px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--text);">
+            <div [innerHTML]="formatRichTextPreview(hero.headline)"></div>
+          </div>
         </div>
 
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Badge Pill Text</label>
-          <input type="text" [(ngModel)]="hero.categoryBadgeText" placeholder="e.g. Fullstack Engineering" style="width: 100%; padding: 10px 14px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #60a5fa; font-size: 13px;" />
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px;">Badge Pill Text</label>
+          <input type="text" [(ngModel)]="hero.categoryBadgeText" placeholder="e.g. Fullstack Engineering" style="width: 100%; padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--accent2); font-size: 13px;" />
         </div>
       </div>
 
       <!-- Lead Bio -->
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Lead Bio Paragraph (Introductory statement)</label>
-        <textarea rows="3" [(ngModel)]="hero.bioLead" placeholder="Passionate and detail-oriented Fullstack Developer..." style="width: 100%; padding: 10px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+      <div style="margin-bottom: 22px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2);">Lead Bio Paragraph (Introductory statement)</label>
+          <div style="display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+            <span style="color: var(--muted); font-size: 10.5px;">Signs:</span>
+            <span style="padding: 1px 6px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 10.5px;" title="Bold text">**bold**</span>
+            <span style="padding: 1px 6px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 10.5px;" title="Italic text">\italic\</span>
+            <span style="padding: 1px 6px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); opacity: 0.6; font-size: 10.5px;" title="Almost Invisible">~~ghost~~</span>
+            <span style="padding: 1px 6px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--accent2); font-size: 10.5px;" title="Code badge">`code`</span>
+          </div>
+        </div>
+        <textarea rows="3" [(ngModel)]="hero.bioLead" placeholder="Passionate and detail-oriented Fullstack Developer..." style="width: 100%; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+        <!-- Live Formatted Preview -->
+        <div *ngIf="hero.bioLead" style="margin-top: 8px; padding: 10px 14px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 8px; font-size: 13px; line-height: 1.5; color: var(--text2);">
+          <span style="display: block; font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Live Preview on Frontend:</span>
+          <div [innerHTML]="formatRichTextPreview(hero.bioLead)"></div>
+        </div>
       </div>
 
       <!-- Frontend & Backend Narratives -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Frontend Engineering Philosophy</label>
-          <textarea rows="4" [(ngModel)]="hero.bioFrontend" placeholder="On the frontend, I leverage modern frameworks like React and Angular..." style="width: 100%; padding: 10px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2);">Frontend Engineering Philosophy</label>
+          </div>
+          <textarea rows="4" [(ngModel)]="hero.bioFrontend" placeholder="On the frontend, I leverage modern frameworks like React and Angular..." style="width: 100%; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+          <div *ngIf="hero.bioFrontend" style="margin-top: 8px; padding: 10px 14px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 8px; font-size: 12.5px; line-height: 1.5; color: var(--text2);">
+            <span style="display: block; font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Live Preview:</span>
+            <div [innerHTML]="formatRichTextPreview(hero.bioFrontend)"></div>
+          </div>
         </div>
 
         <div>
-          <label style="display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">Backend & Cloud Architecture Philosophy</label>
-          <textarea rows="4" [(ngModel)]="hero.bioBackend" placeholder="For the backend, I engineer scalable APIs with NestJS and ASP.NET Core..." style="width: 100%; padding: 10px 12px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text2);">Backend & Cloud Architecture Philosophy</label>
+          </div>
+          <textarea rows="4" [(ngModel)]="hero.bioBackend" placeholder="For the backend, I engineer scalable APIs with NestJS and ASP.NET Core..." style="width: 100%; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--input-text); font-size: 13px; resize: vertical; line-height: 1.5;"></textarea>
+          <div *ngIf="hero.bioBackend" style="margin-top: 8px; padding: 10px 14px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 8px; font-size: 12.5px; line-height: 1.5; color: var(--text2);">
+            <span style="display: block; font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Live Preview:</span>
+            <div [innerHTML]="formatRichTextPreview(hero.bioBackend)"></div>
+          </div>
         </div>
       </div>
 
       <!-- Call To Action (CTA) Buttons -->
-      <div style="padding: 18px; background: #090d16; border: 1px solid #1e293b; border-radius: 12px; margin-bottom: 24px;">
-        <h4 style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 12px;">Call-to-Action (CTA) Navigation Links</h4>
+      <div style="padding: 18px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px;">
+        <h4 style="font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px;">Call-to-Action (CTA) Navigation Links</h4>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
           <!-- Primary CTA -->
-          <div style="padding: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid #334155; border-radius: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase;">Primary CTA</span>
+          <div style="padding: 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase;">Primary CTA</span>
             <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
-              <input type="text" [(ngModel)]="hero.primaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
-              <input type="text" [(ngModel)]="hero.primaryCtaUrl" placeholder="Target Link (e.g. portfolio.html)" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.primaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.primaryCtaUrl" placeholder="Target Link (e.g. portfolio.html)" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
             </div>
           </div>
 
           <!-- Secondary CTA -->
-          <div style="padding: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid #334155; border-radius: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: #a78bfa; text-transform: uppercase;">Secondary CTA</span>
+          <div style="padding: 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--accent2); text-transform: uppercase;">Secondary CTA</span>
             <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
-              <input type="text" [(ngModel)]="hero.secondaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
-              <input type="text" [(ngModel)]="hero.secondaryCtaUrl" placeholder="Target Link (e.g. resume.html)" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.secondaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.secondaryCtaUrl" placeholder="Target Link (e.g. resume.html)" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
             </div>
           </div>
 
           <!-- Tertiary CTA -->
-          <div style="padding: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid #334155; border-radius: 8px;">
-            <span style="font-size: 11px; font-weight: 700; color: #34d399; text-transform: uppercase;">Tertiary CTA</span>
+          <div style="padding: 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--success); text-transform: uppercase;">Tertiary CTA</span>
             <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
-              <input type="text" [(ngModel)]="hero.tertiaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
-              <input type="text" [(ngModel)]="hero.tertiaryCtaUrl" placeholder="Target Link (e.g. resume.html#experience)" style="padding: 6px 10px; background: #090d16; border: 1px solid #1e293b; border-radius: 6px; color: #fff; font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.tertiaryCtaText" placeholder="Button Text" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
+              <input type="text" [(ngModel)]="hero.tertiaryCtaUrl" placeholder="Target Link (e.g. resume.html#experience)" style="padding: 6px 10px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 6px; color: var(--input-text); font-size: 12px;" />
             </div>
           </div>
         </div>
@@ -334,12 +370,12 @@
   <div *ngIf="!isLoading && activeTab === 'socials'">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <div>
-        <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Connected Social Profiles</h3>
-        <p style="font-size: 12px; color: #94a3b8;">Channels displayed across site header, footer, and mobile sidebar.</p>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--text);">Connected Social Profiles</h3>
+        <p style="font-size: 12px; color: var(--text2);">Channels displayed across site header, footer, and mobile sidebar.</p>
       </div>
       <button 
         (click)="openCreateSocialModal()"
-        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>Add Channel</span>
@@ -348,29 +384,29 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
       <div *ngFor="let s of socials"
-           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 14px; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">
+           style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; box-shadow: var(--shadow);">
         
         <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-          <div style="width: 40px; height: 40px; border-radius: 10px; background: #0b1120; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; color: #60a5fa; font-weight: 700; font-size: 14px; flex-shrink: 0;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 700; font-size: 14px; flex-shrink: 0;">
             {{ s.platform ? s.platform[0].toUpperCase() : 'S' }}
           </div>
           <div style="flex: 1; min-width: 0;">
-            <div style="font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ s.title }}</div>
-            <a [href]="s.url" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: #38bdf8; text-decoration: none; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ s.title }}</div>
+            <a [href]="s.url" target="_blank" rel="noopener noreferrer" style="font-size: 12px; color: var(--accent2); text-decoration: none; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
               {{ s.url }}
             </a>
             <!-- Visibility tags -->
             <div style="display: flex; gap: 4px; margin-top: 6px;">
-              <span *ngIf="s.showInHeader" style="background: #1e293b; color: #94a3b8; font-size: 10px; padding: 1px 6px; border-radius: 4px;">Header</span>
-              <span *ngIf="s.showInSidebar" style="background: #1e293b; color: #94a3b8; font-size: 10px; padding: 1px 6px; border-radius: 4px;">Sidebar</span>
-              <span *ngIf="s.showInFooter" style="background: #1e293b; color: #94a3b8; font-size: 10px; padding: 1px 6px; border-radius: 4px;">Footer</span>
+              <span *ngIf="s.showInHeader" style="background: var(--surface2); color: var(--muted); border: 1px solid var(--border); font-size: 10px; padding: 1px 6px; border-radius: 4px;">Header</span>
+              <span *ngIf="s.showInSidebar" style="background: var(--surface2); color: var(--muted); border: 1px solid var(--border); font-size: 10px; padding: 1px 6px; border-radius: 4px;">Sidebar</span>
+              <span *ngIf="s.showInFooter" style="background: var(--surface2); color: var(--muted); border: 1px solid var(--border); font-size: 10px; padding: 1px 6px; border-radius: 4px;">Footer</span>
             </div>
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px;">
-          <button (click)="openEditSocialModal(s)" title="Edit" style="padding: 6px 10px; border-radius: 6px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; cursor: pointer; font-size: 12px;">Edit</button>
-          <button (click)="openDeleteSocial(s, $event)" title="Delete" style="width: 28px; height: 28px; border-radius: 6px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <button (click)="openEditSocialModal(s)" title="Edit" style="padding: 6px 10px; border-radius: 6px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--accent3); cursor: pointer; font-size: 12px;">Edit</button>
+          <button (click)="openDeleteSocial(s, $event)" title="Delete" style="width: 28px; height: 28px; border-radius: 6px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>
@@ -382,14 +418,14 @@
   <!-- ================= TAB 4: WHAT I DO (CORE COMPETENCIES) ================= -->
   <div *ngIf="!isLoading && activeTab === 'disciplines'" style="display: flex; flex-direction: column; gap: 20px;">
     <!-- Top Action Bar -->
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 18px 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 18px 24px; box-shadow: var(--shadow);">
       <div>
-        <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Core Competencies ("What I Do")</h3>
-        <p style="font-size: 12px; color: #94a3b8;">High-level engineering domains and skill badges featured prominently on your portfolio homepage.</p>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--text);">Core Competencies ("What I Do")</h3>
+        <p style="font-size: 12px; color: var(--text2);">High-level engineering domains and skill badges featured prominently on your portfolio homepage.</p>
       </div>
       <button 
         (click)="openAddDiscipline()"
-        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer;"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>Add Competency Card</span>
@@ -398,13 +434,13 @@
 
     <!-- Loading Spinner -->
     <div *ngIf="isLoadingDisciplines" style="display: flex; justify-content: center; padding: 50px 0;">
-      <div style="width: 36px; height: 36px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <div style="width: 36px; height: 36px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite;"></div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!isLoadingDisciplines && disciplines.length === 0" style="text-align: center; padding: 50px 20px; background: rgba(15, 23, 42, 0.5); border: 1px dashed #334155; border-radius: 16px;">
-      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;">No competencies created yet.</p>
-      <button (click)="openAddDiscipline()" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
+    <div *ngIf="!isLoadingDisciplines && disciplines.length === 0" style="text-align: center; padding: 50px 20px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 16px;">
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">No competencies created yet.</p>
+      <button (click)="openAddDiscipline()" style="padding: 8px 16px; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
         + Create First Competency
       </button>
     </div>
@@ -412,7 +448,7 @@
     <!-- Cards Grid -->
     <div *ngIf="!isLoadingDisciplines && disciplines.length > 0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
       <div *ngFor="let card of disciplines; let idx = index"
-           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; transition: all 0.2s;"
+           style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow); position: relative; overflow: hidden; transition: all 0.2s;"
            [style.borderColor]="getCardTheme(card, idx).border">
         
         <div>
@@ -473,22 +509,22 @@
 
             <!-- Right: Index Tag & Order Badge -->
             <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-              <span style="font-family: monospace; font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
+              <span style="font-family: monospace; font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
                 {{ card.indexTag }}
               </span>
-              <span style="font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; padding: 2px 8px; border-radius: 6px;">
+              <span style="font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 2px 8px; border-radius: 6px;">
                 Order: {{ card.sortOrder }}
               </span>
             </div>
           </div>
 
           <!-- Row 2: Title (Full width line matching frontend) -->
-          <h4 style="font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -0.01em;">
+          <h4 style="font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em;">
             {{ card.title }}
           </h4>
 
           <!-- Row 3: Description -->
-          <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.65; margin-bottom: 18px;">
+          <p style="font-size: 13.5px; color: var(--text2); line-height: 1.65; margin-bottom: 18px;">
             {{ card.description }}
           </p>
 
@@ -501,12 +537,12 @@
         </div>
 
         <!-- Row 5: Footer Actions -->
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid #1e293b; padding-top: 14px;">
-          <button (click)="openEditDiscipline(card, $event)" title="Edit" style="padding: 7px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; cursor: pointer; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px;">
+          <button (click)="openEditDiscipline(card, $event)" title="Edit" style="padding: 7px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--accent3); cursor: pointer; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
             Edit
           </button>
-          <button (click)="openDeleteDiscipline(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
+          <button (click)="openDeleteDiscipline(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>
@@ -518,14 +554,14 @@
   <!-- ================= TAB 5: ARCHITECTURE & ENGINEERING PHILOSOPHY ================= -->
   <div *ngIf="!isLoading && activeTab === 'philosophies'" style="display: flex; flex-direction: column; gap: 20px;">
     <!-- Top Action Bar -->
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 18px 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 18px 24px; box-shadow: var(--shadow);">
       <div>
-        <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Architecture & Code Philosophy Cards</h3>
-        <p style="font-size: 12px; color: #94a3b8;">Manage the 3 foundational engineering pillars displayed beneath your bio narrative on the homepage.</p>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--text);">Architecture & Code Philosophy Cards</h3>
+        <p style="font-size: 12px; color: var(--text2);">Manage the 3 foundational engineering pillars displayed beneath your bio narrative on the homepage.</p>
       </div>
       <button 
         (click)="openCreatePhilosophy()"
-        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background 0.15s;"
+        style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background 0.15s;"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>Add Philosophy Card</span>
@@ -534,13 +570,13 @@
 
     <!-- Loading Spinner -->
     <div *ngIf="isLoadingPhilosophies" style="display: flex; justify-content: center; padding: 50px 0;">
-      <div style="width: 36px; height: 36px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <div style="width: 36px; height: 36px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite;"></div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!isLoadingPhilosophies && philosophies.length === 0" style="text-align: center; padding: 50px 20px; background: rgba(15, 23, 42, 0.5); border: 1px dashed #334155; border-radius: 16px;">
-      <p style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;">No philosophy cards defined yet.</p>
-      <button (click)="openCreatePhilosophy()" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
+    <div *ngIf="!isLoadingPhilosophies && philosophies.length === 0" style="text-align: center; padding: 50px 20px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 16px;">
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">No philosophy cards defined yet.</p>
+      <button (click)="openCreatePhilosophy()" style="padding: 8px 16px; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">
         + Create First Card
       </button>
     </div>
@@ -548,8 +584,8 @@
     <!-- Cards Grid -->
     <div *ngIf="!isLoadingPhilosophies && philosophies.length > 0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
       <div *ngFor="let card of philosophies; let idx = index"
-           [style.borderColor]="card.accentColor ? (card.accentColor + '55') : '#1e293b'"
-           style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 25px rgba(0,0,0,0.3); position: relative; transition: all 0.2s;">
+           [style.borderColor]="card.accentColor ? (card.accentColor + '55') : 'var(--card-border)'"
+           style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow); position: relative; transition: all 0.2s;">
         
         <div>
           <!-- Header: Icon & Sort Order -->
@@ -560,29 +596,29 @@
                  style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
               <span class="material-symbols-outlined" style="font-size: 24px;">{{ card.icon || 'speed' }}</span>
             </div>
-            <span style="font-size: 11px; background: #0b1120; border: 1px solid #334155; color: #94a3b8; padding: 2px 8px; border-radius: 6px;">
+            <span style="font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 2px 8px; border-radius: 6px;">
               Order: {{ card.sortOrder }}
             </span>
           </div>
 
           <!-- Title -->
-          <h4 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px;">
+          <h4 style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px;">
             {{ card.title }}
           </h4>
 
           <!-- Description -->
-          <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px;">
+          <p style="font-size: 13.5px; color: var(--text2); line-height: 1.6; margin-bottom: 20px;">
             {{ card.description }}
           </p>
         </div>
 
         <!-- Footer Actions -->
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid #1e293b; padding-top: 14px;">
-          <button (click)="openEditPhilosophy(card, $event)" title="Edit" style="padding: 7px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; cursor: pointer; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px;">
+          <button (click)="openEditPhilosophy(card, $event)" title="Edit" style="padding: 7px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--accent3); cursor: pointer; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
             Edit
           </button>
-          <button (click)="openDeletePhilosophy(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
+          <button (click)="openDeletePhilosophy(card, $event)" title="Delete" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>

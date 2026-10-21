@@ -37,6 +37,25 @@ export class ProfileComponent implements OnInit {
   toastMessage: string | null = null;
   toastType: 'success' | 'error' = 'success';
 
+  formatRichTextPreview(raw: string): string {
+    if (!raw) return '';
+    let safe = raw
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    safe = safe.replace(/`([^`]+)`/g, '<code style="padding: 2px 6px; border-radius: 4px; background: var(--surface3); font-family: monospace; font-size: 11px; color: var(--accent2);">$1</code>');
+    safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong style="font-weight: 700; color: var(--text);">$1</strong>');
+    safe = safe.replace(/~~([^~]+)~~/g, '<span class="almost-invisible" style="opacity: 0.22;" title="Hover to view text">$1</span>');
+    safe = safe.replace(/\\\\([^\\]+)\\\\/g, '<em style="font-style: italic; color: var(--text2);">$1</em>');
+    safe = safe.replace(/\\([^\\]+)\\/g, '<em style="font-style: italic; color: var(--text2);">$1</em>');
+    safe = safe.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em style="font-style: italic; color: var(--text2);">$1</em>');
+    safe = safe.replace(/(?<!_)_([^_]+)_(?!_)/g, '<em style="font-style: italic; color: var(--text2);">$1</em>');
+    safe = safe.replace(/\r\n/g, '\n');
+    safe = safe.replace(/\n\n+/g, '<br/><br/>');
+    safe = safe.replace(/\n/g, '<br/>');
+    return safe;
+  }
+
   // Profile Details Model
   profile: ProfileDetail = {
     fullName: '',
